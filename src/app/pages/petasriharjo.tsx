@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle } from "react-leaflet";
+import { useEffect, useState, useRef } from "react";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { InfoModal } from "./modals";
+import { desaBoundary } from "./PetaSriharjoBoundary";
 
 // Fix default marker icon issue in Next.js
 if (typeof window !== "undefined") {
@@ -16,12 +17,12 @@ if (typeof window !== "undefined") {
   });
 }
 
-// Data dusun di Sriharjo dengan koordinat (contoh)
+// Data dusun di Sriharjo dengan koordinat yang disesuaikan dengan batas baru
 const dusunData = [
   {
     id: 1,
     name: "Dusun Grogol",
-    position: [-7.9395, 110.4045] as [number, number],
+    position: [-7.9450, 110.4050] as [number, number],
     population: 567,
     riskLevel: "low",
     description: "Dusun dengan akses jalan baik dan jauh dari area rawan bencana",
@@ -29,7 +30,7 @@ const dusunData = [
   {
     id: 2,
     name: "Dusun Karangasem",
-    position: [-7.9355, 110.4085] as [number, number],
+    position: [-7.9420, 110.4080] as [number, number],
     population: 623,
     riskLevel: "medium",
     description: "Dusun di area perbukitan dengan risiko longsor sedang",
@@ -37,7 +38,7 @@ const dusunData = [
   {
     id: 3,
     name: "Dusun Kembang",
-    position: [-7.9425, 110.4105] as [number, number],
+    position: [-7.9480, 110.4150] as [number, number],
     population: 489,
     riskLevel: "high",
     description: "Area perbukitan dengan risiko longsor tinggi saat musim hujan",
@@ -45,7 +46,7 @@ const dusunData = [
   {
     id: 4,
     name: "Dusun Ngepringan",
-    position: [-7.9375, 110.4025] as [number, number],
+    position: [-7.9440, 110.4020] as [number, number],
     population: 701,
     riskLevel: "low",
     description: "Dusun di dataran rendah dengan infrastruktur lengkap",
@@ -53,7 +54,7 @@ const dusunData = [
   {
     id: 5,
     name: "Dusun Jatimulyo",
-    position: [-7.9445, 110.4065] as [number, number],
+    position: [-7.9520, 110.4100] as [number, number],
     population: 534,
     riskLevel: "medium",
     description: "Area transisi antara dataran dan perbukitan",
@@ -61,7 +62,7 @@ const dusunData = [
   {
     id: 6,
     name: "Dusun Selopamioro",
-    position: [-7.9365, 110.4125] as [number, number],
+    position: [-7.9460, 110.4200] as [number, number],
     population: 612,
     riskLevel: "low",
     description: "Dusun dengan akses mudah ke pusat desa",
@@ -69,7 +70,7 @@ const dusunData = [
   {
     id: 7,
     name: "Dusun Wonolelo",
-    position: [-7.9405, 110.4145] as [number, number],
+    position: [-7.9550, 110.3850] as [number, number],
     population: 456,
     riskLevel: "high",
     description: "Dusun di area tinggi dengan risiko longsor dan kekeringan",
@@ -77,20 +78,11 @@ const dusunData = [
   {
     id: 8,
     name: "Dusun Plumbon",
-    position: [-7.9345, 110.4055] as [number, number],
+    position: [-7.9380, 110.3950] as [number, number],
     population: 589,
     riskLevel: "medium",
     description: "Dusun dengan potensi banjir lokal saat hujan deras",
   },
-];
-
-// Batas desa Sriharjo (koordinat polygon)
-const desaBoundary: [number, number][] = [
-  [-7.9325, 110.4015],
-  [-7.9325, 110.4165],
-  [-7.9465, 110.4165],
-  [-7.9465, 110.4015],
-  [-7.9325, 110.4015],
 ];
 
 // Custom marker icons based on risk level
@@ -260,14 +252,115 @@ function DusunModal({ isOpen, onClose, dusun }: DusunModalProps) {
   );
 }
 
+// Component to handle map centering and boundaries
+function MapController({ center, zoom }: { center: [number, number]; zoom: number }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    map.setView(center, zoom);
+    
+    // Calculate bounds from desaBoundary
+    const bounds = L.latLngBounds(desaBoundary);
+    const paddedBounds = bounds.pad(0.1); // Add 10% padding
+    
+    // Set max bounds to restrict panning
+    map.setMaxBounds(paddedBounds);
+    
+    // Set min/max zoom levels
+    map.setMinZoom(12);
+    map.setMaxZoom(18);
+    
+  }, [map, center, zoom]);
+  
+  return null;
+}
+
+// Component for grayscale overlay outside boundary
+function BoundaryOverlay() {
+  const map = useMap();
+  
+  useEffect(() => {
+    // Create outer boundary (world boundary)
+    const worldBounds: [number, number][] = [
+      [-90, -180],
+      [-90, 180],
+      [90, 180],
+      [90, -180],
+      [-90, -180]
+    ];
+    
+    // Create polygon with hole (inverse of Sriharjo boundary)
+    const overlayPolygon = L.polygon([worldBounds, desaBoundary], {
+      color: 'transparent',
+      fillColor: '#000000',
+      fillOpacity: 0.3,
+      stroke: false,
+      interactive: false
+    });
+    
+    overlayPolygon.addTo(map);
+    
+    // Add grayscale filter to tiles outside boundary
+    const style = document.createElement('style');
+    style.textContent = `
+      .leaflet-tile-container {
+        filter: none;
+      }
+      .boundary-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 400;
+        background: linear-gradient(
+          rgba(0,0,0,0.2) 0%,
+          rgba(0,0,0,0.1) 50%,
+          rgba(0,0,0,0.2) 100%
+        );
+        mix-blend-mode: multiply;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      map.removeLayer(overlayPolygon);
+      document.head.removeChild(style);
+    };
+  }, [map]);
+  
+  return null;
+}
+
 export default function PetaSriharjo() {
   const [selectedDusun, setSelectedDusun] = useState<typeof dusunData[0] | null>(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [mapReady, setMapReady] = useState(false);
+  
+  // Update initial map center to better fit the new boundary
+  const [mapCenter, setMapCenter] = useState<[number, number]>([-7.946, 110.404]);
+  const [mapZoom, setMapZoom] = useState(13);
 
   useEffect(() => {
     setMapReady(true);
   }, []);
+
+  // Calculate center point of Sriharjo boundary
+  const calculateBoundaryCenter = (): [number, number] => {
+    const lats = desaBoundary.map(coord => coord[0]);
+    const lngs = desaBoundary.map(coord => coord[1]);
+    const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
+    const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
+    return [centerLat, centerLng];
+  };
+
+  const boundaryCenter = calculateBoundaryCenter();
+
+  const handleResetToSriharjo = () => {
+    setMapCenter(boundaryCenter);
+    setMapZoom(13); // Adjusted zoom level for better fit
+  };
 
   if (!mapReady) {
     return (
@@ -284,6 +377,18 @@ export default function PetaSriharjo() {
     <div className="relative w-full h-full">
       {/* Map Controls Overlay */}
       <div className="absolute top-4 right-4 z-400 space-y-3">
+        <button
+          onClick={handleResetToSriharjo}
+          className="bg-white hover:bg-gray-50 text-[#044BB1] px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2 font-semibold border-2 border-[#044BB1]"
+          title="Kembali ke Peta Sriharjo"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span>Sriharjo</span>
+        </button>
+        
         <button
           onClick={() => setIsInfoModalOpen(true)}
           className="bg-white hover:bg-gray-50 text-[#044BB1] px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2 font-semibold border-2 border-[#044BB1]"
@@ -327,35 +432,71 @@ export default function PetaSriharjo() {
 
       {/* Map */}
       <MapContainer
-        center={[-7.9390, 110.4090]}
-        zoom={14}
+        center={boundaryCenter}
+        zoom={13}
         className="w-full h-full rounded-xl"
         style={{ height: "100%", width: "100%", zIndex: 1 }}
+        zoomControl={false}
+        scrollWheelZoom={true}
+        doubleClickZoom={true}
+        dragging={true}
       >
+        <MapController center={mapCenter} zoom={mapZoom} />
+        <BoundaryOverlay />
+        
+        {/* Custom Zoom Control */}
+        <div className="leaflet-control-container">
+          <div className="leaflet-top leaflet-left">
+            <div className="leaflet-control-zoom leaflet-bar leaflet-control">
+              <a 
+                className="leaflet-control-zoom-in" 
+                href="#" 
+                title="Zoom in"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const map = (e.target as any).closest('.leaflet-container')?._leaflet_map;
+                  if (map) map.zoomIn();
+                }}
+              >+</a>
+              <a 
+                className="leaflet-control-zoom-out" 
+                href="#" 
+                title="Zoom out"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const map = (e.target as any).closest('.leaflet-container')?._leaflet_map;
+                  if (map) map.zoomOut();
+                }}
+              >−</a>
+            </div>
+          </div>
+        </div>
+        
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Batas Desa */}
+        {/* Batas Desa - Enhanced styling */}
         <Polyline
           positions={desaBoundary}
           pathOptions={{
             color: "#044BB1",
-            weight: 4,
-            opacity: 0.8,
-            dashArray: "10, 10",
+            weight: 5,
+            opacity: 1,
+            dashArray: "15, 10",
+            lineCap: "round",
+            lineJoin: "round"
           }}
         />
 
-        {/* Area Highlight (optional) */}
-        <Circle
-          center={[-7.9390, 110.4090]}
-          radius={1500}
+        {/* Area Highlight inside boundary */}
+        <Polygon
+          positions={desaBoundary}
           pathOptions={{
-            color: "#044BB1",
+            color: "transparent",
             fillColor: "#044BB1",
-            fillOpacity: 0.05,
+            fillOpacity: 0.03,
             weight: 0,
           }}
         />
@@ -403,6 +544,25 @@ export default function PetaSriharjo() {
           </Marker>
         ))}
       </MapContainer>
+
+      {/* Boundary Overlay Div */}
+      <div className="absolute inset-0 pointer-events-none z-10">
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: `
+              radial-gradient(
+                ellipse at center,
+                transparent 40%,
+                rgba(0,0,0,0.1) 60%,
+                rgba(0,0,0,0.2) 80%,
+                rgba(0,0,0,0.5) 100%
+              )
+            `,
+            mixBlendMode: 'multiply'
+          }}
+        />
+      </div>
 
       {/* Modals */}
       <DusunModal
