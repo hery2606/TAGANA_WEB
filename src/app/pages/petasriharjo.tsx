@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon, LayersControl } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { InfoModal } from "./modals";
@@ -337,8 +337,6 @@ export default function PetaSriharjo() {
   const [selectedDusun, setSelectedDusun] = useState<typeof dusunData[0] | null>(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [mapReady, setMapReady] = useState(false);
-  
-  // Update initial map center to better fit the new boundary
   const [mapCenter, setMapCenter] = useState<[number, number]>([-7.946, 110.404]);
   const [mapZoom, setMapZoom] = useState(13);
 
@@ -477,19 +475,52 @@ export default function PetaSriharjo() {
           </div>
         </div>
         
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        {/* Layer Control with Satellite and Street View */}
+        <LayersControl position="topright">
+          <LayersControl.BaseLayer name="Peta Jalan">
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+          </LayersControl.BaseLayer>
+          
+          <LayersControl.BaseLayer checked name="Satelit">
+            <TileLayer
+              attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              maxZoom={18}
+            />
+          </LayersControl.BaseLayer>
+
+          <LayersControl.BaseLayer name="Satelit + Label">
+            <TileLayer
+              attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              maxZoom={18}
+            />
+            <TileLayer
+              attribution=''
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+            />
+          </LayersControl.BaseLayer>
+
+          <LayersControl.BaseLayer name="Terrain">
+            <TileLayer
+              attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>'
+              url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+              maxZoom={17}
+            />
+          </LayersControl.BaseLayer>
+        </LayersControl>
 
         {/* Batas Desa - Enhanced styling */}
         <Polyline
           positions={desaBoundary}
           pathOptions={{
-            color: "#044BB1",
-            weight: 5,
+            color: "#FFFF00",
+            weight: 3,
             opacity: 1,
-            dashArray: "15, 10",
+            dashArray: "10, 5",
             lineCap: "round",
             lineJoin: "round"
           }}
@@ -501,7 +532,7 @@ export default function PetaSriharjo() {
           pathOptions={{
             color: "transparent",
             fillColor: "#044BB1",
-            fillOpacity: 0.03,
+            fillOpacity: 0.1,
             weight: 0,
           }}
         />
