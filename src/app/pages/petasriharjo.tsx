@@ -375,62 +375,7 @@ export default function PetaSriharjo() {
 
   return (
     <div className="relative w-full h-full">
-      {/* Map Controls Overlay */}
-      <div className="absolute top-4 right-4 z-400 space-y-3">
-        <button
-          onClick={handleResetToSriharjo}
-          className="bg-white hover:bg-gray-50 text-[#044BB1] px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2 font-semibold border-2 border-[#044BB1]"
-          title="Kembali ke Peta Sriharjo"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <span>Sriharjo</span>
-        </button>
-        
-        <button
-          onClick={() => setIsInfoModalOpen(true)}
-          className="bg-white hover:bg-gray-50 text-[#044BB1] px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2 font-semibold border-2 border-[#044BB1]"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>Info Desa</span>
-        </button>
-      </div>
-
-      {/* Legend */}
-      <div className="absolute bottom-4 left-4 z-400 bg-white rounded-xl shadow-xl p-4 max-w-xs">
-        <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-          <svg className="w-5 h-5 mr-2 text-[#044BB1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-          </svg>
-          Legenda
-        </h3>
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow"></div>
-            <span className="text-sm text-gray-700">Zona Aman</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-yellow-500 rounded-full border-2 border-white shadow"></div>
-            <span className="text-sm text-gray-700">Zona Waspada</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow"></div>
-            <span className="text-sm text-gray-700">Zona Bahaya</span>
-          </div>
-          <div className="border-t pt-2 mt-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-0.5 bg-[#044BB1]"></div>
-              <span className="text-sm text-gray-700">Batas Desa</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Map */}
+      {/* Map Container - Lower z-index */}
       <MapContainer
         center={boundaryCenter}
         zoom={13}
@@ -444,12 +389,13 @@ export default function PetaSriharjo() {
         <MapController center={mapCenter} zoom={mapZoom} />
         <BoundaryOverlay />
         
-        {/* Custom Zoom Control */}
-        <div className="leaflet-control-container">
+        {/* All Controls Container - Same z-index level */}
+        <div className="leaflet-control-container" style={{ zIndex: 500 }}>
+          {/* Zoom Controls */}
           <div className="leaflet-top leaflet-left">
-            <div className="leaflet-control-zoom leaflet-bar leaflet-control">
+            <div className="leaflet-control-zoom leaflet-bar leaflet-control bg-white shadow-lg border border-gray-200">
               <a 
-                className="leaflet-control-zoom-in" 
+                className="leaflet-control-zoom-in text-[#044BB1] hover:bg-gray-50" 
                 href="#" 
                 title="Zoom in"
                 onClick={(e) => {
@@ -459,7 +405,7 @@ export default function PetaSriharjo() {
                 }}
               >+</a>
               <a 
-                className="leaflet-control-zoom-out" 
+                className="leaflet-control-zoom-out text-[#044BB1] hover:bg-gray-50" 
                 href="#" 
                 title="Zoom out"
                 onClick={(e) => {
@@ -468,6 +414,65 @@ export default function PetaSriharjo() {
                   if (map) map.zoomOut();
                 }}
               >−</a>
+            </div>
+          </div>
+
+          {/* Map Controls - Top Right */}
+          <div className="leaflet-top leaflet-right">
+            <div className="leaflet-control space-y-3 mt-2 mr-2">
+              <button
+                onClick={handleResetToSriharjo}
+                className="bg-white hover:bg-gray-50 text-[#044BB1] px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2 font-semibold border-2 border-[#044BB1] block"
+                title="Kembali ke Peta Sriharjo"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Sriharjo</span>
+              </button>
+              
+              <button
+                onClick={() => setIsInfoModalOpen(true)}
+                className="bg-white hover:bg-gray-50 text-[#044BB1] px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2 font-semibold border-2 border-[#044BB1] block"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Info Desa</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Legend - Bottom Left */}
+          <div className="leaflet-bottom leaflet-left">
+            <div className="leaflet-control bg-white rounded-xl shadow-xl p-4 max-w-xs border border-gray-200 mb-2 ml-2">
+              <h3 className="font-bold text-gray-800 mb-3 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-[#044BB1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                </svg>
+                Legenda
+              </h3>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow"></div>
+                  <span className="text-sm text-gray-700">Zona Aman</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-yellow-500 rounded-full border-2 border-white shadow"></div>
+                  <span className="text-sm text-gray-700">Zona Waspada</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow"></div>
+                  <span className="text-sm text-gray-700">Zona Bahaya</span>
+                </div>
+                <div className="border-t border-gray-200 pt-2 mt-2">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-0.5 bg-[#044BB1]"></div>
+                    <span className="text-sm text-gray-700">Batas Desa</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -545,7 +550,7 @@ export default function PetaSriharjo() {
         ))}
       </MapContainer>
 
-      {/* Boundary Overlay Div */}
+      {/* Boundary Overlay Div - Lower z-index than controls */}
       <div className="absolute inset-0 pointer-events-none z-10">
         <div 
           className="absolute inset-0 opacity-30"
@@ -564,7 +569,7 @@ export default function PetaSriharjo() {
         />
       </div>
 
-      {/* Modals */}
+      {/* Modals - Highest z-index */}
       <DusunModal
         isOpen={selectedDusun !== null}
         onClose={() => setSelectedDusun(null)}
