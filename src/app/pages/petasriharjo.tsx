@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon, LayersControl } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon, LayersControl, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { InfoModal } from "./modals";
@@ -17,71 +17,111 @@ if (typeof window !== "undefined") {
   });
 }
 
-// Data dusun di Sriharjo dengan koordinat yang disesuaikan dengan batas baru
+// Data dusun di Sriharjo dengan koordinat yang akurat
 const dusunData = [
   {
     id: 1,
-    name: "Dusun Grogol",
-    position: [-7.9450, 110.4050] as [number, number],
+    name: "Dusun Miri",
+    position: [-7.9441900, 110.3782921] as [number, number],
     population: 567,
-    riskLevel: "low",
-    description: "Dusun dengan akses jalan baik dan jauh dari area rawan bencana",
+    riskLevel: "medium",
+    description: "Dusun Miri terletak di wilayah tengah Sriharjo dengan aksesibilitas yang baik",
   },
   {
     id: 2,
-    name: "Dusun Karangasem",
-    position: [-7.9420, 110.4080] as [number, number],
+    name: "Dusun Jati",
+    position: [-7.9399872, 110.3808812] as [number, number],
     population: 623,
-    riskLevel: "medium",
-    description: "Dusun di area perbukitan dengan risiko longsor sedang",
+    riskLevel: "low",
+    description: "Dusun Jati memiliki kondisi geografis yang relatif aman dari bencana",
   },
   {
     id: 3,
-    name: "Dusun Kembang",
-    position: [-7.9480, 110.4150] as [number, number],
+    name: "Dusun Mojohuro",
+    position: [-7.9337700, 110.3800634] as [number, number],
     population: 489,
-    riskLevel: "high",
-    description: "Area perbukitan dengan risiko longsor tinggi saat musim hujan",
+    riskLevel: "low",
+    description: "Dusun Mojohuro berada di dataran dengan risiko bencana rendah",
   },
   {
     id: 4,
-    name: "Dusun Ngepringan",
-    position: [-7.9440, 110.4020] as [number, number],
+    name: "Dusun Pelemadu",
+    position: [-7.9388033, 110.3735060] as [number, number],
     population: 701,
-    riskLevel: "low",
-    description: "Dusun di dataran rendah dengan infrastruktur lengkap",
+    riskLevel: "medium",
+    description: "Dusun Pelemadu memerlukan kewaspadaan pada musim hujan",
   },
   {
     id: 5,
-    name: "Dusun Jatimulyo",
-    position: [-7.9520, 110.4100] as [number, number],
+    name: "Dusun Sungapan",
+    position: [-7.9357340, 110.3696337] as [number, number],
     population: 534,
     riskLevel: "medium",
-    description: "Area transisi antara dataran dan perbukitan",
+    description: "Dusun Sungapan terletak di area yang memerlukan pemantauan rutin",
   },
   {
     id: 6,
-    name: "Dusun Selopamioro",
-    position: [-7.9460, 110.4200] as [number, number],
+    name: "Dusun Gondosuli",
+    position: [-7.9357941, 110.3633452] as [number, number],
     population: 612,
-    riskLevel: "low",
-    description: "Dusun dengan akses mudah ke pusat desa",
+    riskLevel: "high",
+    description: "Dusun Gondosuli berada di area rawan dengan risiko tinggi, perlu mitigasi aktif",
   },
   {
     id: 7,
-    name: "Dusun Wonolelo",
-    position: [-7.9550, 110.3850] as [number, number],
+    name: "Dusun Trukan",
+    position: [-7.9428914, 110.3675660] as [number, number],
     population: 456,
     riskLevel: "high",
-    description: "Dusun di area tinggi dengan risiko longsor dan kekeringan",
+    description: "Dusun Trukan memiliki topografi yang memerlukan perhatian khusus",
   },
   {
     id: 8,
-    name: "Dusun Plumbon",
-    position: [-7.9380, 110.3950] as [number, number],
+    name: "Dusun Dogongan",
+    position: [-7.9463543, 110.3640434] as [number, number],
     population: 589,
+    riskLevel: "high",
+    description: "Dusun Dogongan berada di zona risiko tinggi, evakuasi prioritas",
+  },
+  {
+    id: 9,
+    name: "Dusun Ketos",
+    position: [-7.9525859, 110.3633452] as [number, number],
+    population: 478,
+    riskLevel: "high",
+    description: "Dusun Ketos terletak di area dengan potensi bahaya tinggi",
+  },
+  {
+    id: 10,
+    name: "Dusun Ngrancah",
+    position: [-7.9492636, 110.3709202] as [number, number],
+    population: 545,
     riskLevel: "medium",
-    description: "Dusun dengan potensi banjir lokal saat hujan deras",
+    description: "Dusun Ngrancah memerlukan monitoring berkala",
+  },
+  {
+    id: 11,
+    name: "Dusun Pengkol",
+    position: [-7.9531678, 110.3739433] as [number, number],
+    population: 492,
+    riskLevel: "medium",
+    description: "Dusun Pengkol berada di area transisi dengan risiko sedang",
+  },
+  {
+    id: 12,
+    name: "Dusun Sompok",
+    position: [-7.9546100, 110.3800634] as [number, number],
+    population: 523,
+    riskLevel: "low",
+    description: "Dusun Sompok memiliki kondisi yang relatif aman",
+  },
+  {
+    id: 13,
+    name: "Dusun Wunut",
+    position: [-7.9467117, 110.3776687] as [number, number],
+    population: 601,
+    riskLevel: "medium",
+    description: "Dusun Wunut memerlukan kewaspadaan pada kondisi cuaca ekstrem",
   },
 ];
 
@@ -100,20 +140,20 @@ const createCustomIcon = (riskLevel: string) => {
     html: `
       <div style="position: relative;">
         <div style="
-          width: 32px;
-          height: 32px;
+          width: 36px;
+          height: 36px;
           background: ${color};
           border: 3px solid white;
           border-radius: 50% 50% 50% 0;
           transform: rotate(-45deg);
-          box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.4);
           display: flex;
           align-items: center;
           justify-content: center;
         ">
           <div style="
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: white;
             border-radius: 50%;
             transform: rotate(45deg);
@@ -121,9 +161,9 @@ const createCustomIcon = (riskLevel: string) => {
         </div>
       </div>
     `,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32],
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -36],
   });
 };
 
@@ -373,7 +413,6 @@ export default function PetaSriharjo() {
 
   return (
     <div className="relative w-full h-full">
-      {/* Map Container - Lower z-index */}
       <MapContainer
         center={boundaryCenter}
         zoom={13}
@@ -518,7 +557,7 @@ export default function PetaSriharjo() {
           positions={desaBoundary}
           pathOptions={{
             color: "#FFFF00",
-            weight: 3,
+            weight: 4,
             opacity: 1,
             dashArray: "10, 5",
             lineCap: "round",
@@ -532,12 +571,12 @@ export default function PetaSriharjo() {
           pathOptions={{
             color: "transparent",
             fillColor: "#044BB1",
-            fillOpacity: 0.1,
+            fillOpacity: 0.08,
             weight: 0,
           }}
         />
 
-        {/* Markers untuk setiap dusun */}
+        {/* Markers untuk setiap dusun dengan label permanen */}
         {dusunData.map((dusun) => (
           <Marker
             key={dusun.id}
@@ -547,39 +586,104 @@ export default function PetaSriharjo() {
               click: () => setSelectedDusun(dusun),
             }}
           >
+            {/* Tooltip permanen menampilkan nama dusun */}
+            <Tooltip 
+              permanent 
+              direction="top" 
+              offset={[0, -40]}
+              className="custom-tooltip"
+            >
+              <div style={{
+                background: 'white',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                border: `2px solid ${
+                  dusun.riskLevel === "low"
+                    ? "#10b981"
+                    : dusun.riskLevel === "medium"
+                    ? "#f59e0b"
+                    : "#ef4444"
+                }`,
+                fontWeight: 'bold',
+                fontSize: '11px',
+                color: '#1f2937',
+                whiteSpace: 'nowrap'
+              }}>
+                {dusun.name.replace('Dusun ', '')}
+              </div>
+            </Tooltip>
+
+            {/* Popup detail saat marker diklik */}
             <Popup>
-              <div className="p-2 min-w-[200px]">
-                <h3 className="font-bold text-[#044BB1] mb-2">{dusun.name}</h3>
-                <div className="space-y-1 text-sm">
-                  <p className="text-gray-700">
-                    <span className="font-semibold">Penduduk:</span> {dusun.population} jiwa
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-semibold">Risiko:</span>{" "}
-                    <span
-                      className={`font-bold ${
-                        dusun.riskLevel === "low"
-                          ? "text-green-600"
-                          : dusun.riskLevel === "medium"
-                          ? "text-yellow-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {dusun.riskLevel === "low" ? "Rendah" : dusun.riskLevel === "medium" ? "Sedang" : "Tinggi"}
-                    </span>
-                  </p>
+              <div className="p-2 min-w-[220px]">
+                <h3 className="font-bold text-[#044BB1] mb-2 text-base">{dusun.name}</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    </svg>
+                    <p className="text-gray-700">
+                      <span className="font-semibold">Penduduk:</span> {dusun.population} jiwa
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-gray-700">
+                      <span className="font-semibold">Risiko:</span>{" "}
+                      <span
+                        className={`font-bold ${
+                          dusun.riskLevel === "low"
+                            ? "text-green-600"
+                            : dusun.riskLevel === "medium"
+                            ? "text-yellow-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {dusun.riskLevel === "low" ? "Rendah" : dusun.riskLevel === "medium" ? "Sedang" : "Tinggi"}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-2 pt-1">
+                    <svg className="w-4 h-4 text-gray-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-xs text-gray-600 leading-relaxed">{dusun.description}</p>
+                  </div>
                 </div>
                 <button
                   onClick={() => setSelectedDusun(dusun)}
-                  className="mt-3 w-full bg-[#044BB1] hover:bg-[#033a8c] text-white px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200"
+                  className="mt-3 w-full bg-[#044BB1] hover:bg-[#033a8c] text-white px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
                 >
-                  Lihat Detail
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Lihat Detail Lengkap</span>
                 </button>
               </div>
             </Popup>
           </Marker>
         ))}
       </MapContainer>
+
+      {/* Add custom CSS for tooltips */}
+      <style jsx global>{`
+        .custom-tooltip {
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+        }
+        .custom-tooltip::before {
+          display: none !important;
+        }
+        .leaflet-tooltip-left.custom-tooltip::before,
+        .leaflet-tooltip-right.custom-tooltip::before {
+          display: none !important;
+        }
+      `}</style>
 
       {/* Boundary Overlay Div - Lower z-index than controls */}
       <div className="absolute inset-0 pointer-events-none z-10">
