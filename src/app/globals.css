@@ -61,3 +61,24 @@ body {
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1);
 }
 
+
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Smooth transitions for all interactive elements */
+select {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Custom scrollbar for dropdown */
+select option {
+  scrollbar-width: thin;
+  scrollbar-color: #3b82f6 #1e3a8a;
+}

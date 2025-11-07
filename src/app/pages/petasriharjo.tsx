@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon, LayersControl, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { InfoModal } from "../components/modals_desa";
 import { desaBoundary } from "../data/PetaSriharjoBoundary";
-import { data } from "../data/datadusun.json";
+import { dusunData } from "../data/datadususn";
 
 
 
@@ -39,224 +40,7 @@ interface Dusun {
 }
 
 // Data dusun di Sriharjo dengan koordinat yang akurat dan data demografi dari DAFTAR RUTA IKS 2025
-const dusunData: Dusun[] = [
-  {
-    id: 1,
-    name: "Dusun Miri",
-    position: [-7.9380459,110.3718411] as [number, number],
-    population: 954, // Jumlah Penduduk
-    riskLevel: "medium",
-    description:
-      "Dusun Miri terletak di wilayah tengah Sriharjo dengan aksesibilitas yang baik",
-    jumlahKK: 339,
-    jumlahLakiLaki: 485,
-    jumlahPerempuan: 469,
-    jumlahBalita: 25,
-    jumlahLansia: 197,
-    jumlahIbuHamil: 5,
-    jumlahPenyandangDisabilitas: 14,
-    jumlahPendudukMiskin: 84,
-  },
-  {
-    id: 2,
-    name: "Dusun Jati",
-    position: [-7.9446043,110.3746045] as [number, number],
-    population: 1143, // Jumlah Penduduk
-    riskLevel: "low",
-    description:
-      "Dusun Jati memiliki kondisi geografis yang relatif aman dari bencana",
-    jumlahKK: 415,
-    jumlahLakiLaki: 564,
-    jumlahPerempuan: 579,
-    jumlahBalita: 52,
-    jumlahLansia: 230,
-    jumlahIbuHamil: 8,
-    jumlahPenyandangDisabilitas: 18,
-    jumlahPendudukMiskin: 123,
-  },
-  {
-    id: 3,
-    name: "Dusun Mojohuro",
-    position: [-7.9442949, 110.3728514] as [number, number],
-    population: 914, // Jumlah Penduduk
-    riskLevel: "low",
-    description:
-      "Dusun Mojohuro berada di dataran dengan risiko bencana rendah",
-    jumlahKK: 344,
-    jumlahLakiLaki: 483,
-    jumlahPerempuan: 431,
-    jumlahBalita: 45,
-    jumlahLansia: 194,
-    jumlahIbuHamil: 2,
-    jumlahPenyandangDisabilitas: 15,
-    jumlahPendudukMiskin: 70,
-  },
-  {
-    id: 4,
-    name: "Dusun Pelemadu",
-    position: [-7.9466149, 110.3681175] as [number, number],
-    population: 1168, // Jumlah Penduduk
-    riskLevel: "medium",
-    description: "Dusun Pelemadu memerlukan kewaspadaan pada musim hujan",
-    jumlahKK: 443,
-    jumlahLakiLaki: 567,
-    jumlahPerempuan: 601,
-    jumlahBalita: 44,
-    jumlahLansia: 241,
-    jumlahIbuHamil: 2,
-    jumlahPenyandangDisabilitas: 16,
-    jumlahPendudukMiskin: 87,
-  },
-  {
-    id: 5,
-    name: "Dusun Sungapan",
-    position: [-7.952379, 110.3688622] as [number, number],
-    population: 475, // Jumlah Penduduk
-    riskLevel: "medium",
-    description:
-      "Dusun Sungapan terletak di area yang memerlukan pemantauan rutin",
-    jumlahKK: 179,
-    jumlahLakiLaki: 217,
-    jumlahPerempuan: 258,
-    jumlahBalita: 16,
-    jumlahLansia: 82,
-    jumlahIbuHamil: 1,
-    jumlahPenyandangDisabilitas: 10,
-    jumlahPendudukMiskin: 141,
-  },
-  {
-    id: 6,
-    name: "Dusun Gondosuli",
-    position: [-7.9508624, 110.3733306] as [number, number],
-    population: 460, // Jumlah Penduduk
-    riskLevel: "high",
-    description:
-      "Dusun Gondosuli berada di area rawan dengan risiko tinggi, perlu mitigasi aktif",
-    jumlahKK: 180,
-    jumlahLakiLaki: 223,
-    jumlahPerempuan: 237,
-    jumlahBalita: 22,
-    jumlahLansia: 122,
-    jumlahIbuHamil: 1,
-    jumlahPenyandangDisabilitas: 5,
-    jumlahPendudukMiskin: 47,
-  },
-  {
-    id: 7,
-    name: "Dusun Trukan",
-    position: [-7.9532895, 110.3763096] as [number, number],
-    population: 695, // Jumlah Penduduk
-    riskLevel: "high",
-    description:
-      "Dusun Trukan memiliki topografi yang memerlukan perhatian khusus",
-    jumlahKK: 249,
-    jumlahLakiLaki: 354,
-    jumlahPerempuan: 341,
-    jumlahBalita: 40,
-    jumlahLansia: 147,
-    jumlahIbuHamil: 2,
-    jumlahPenyandangDisabilitas: 6,
-    jumlahPendudukMiskin: 81,
-  },
-  {
-    id: 8,
-    name: "Dusun Dogongan",
-    position: [-7.9480565,110.3777991] as [number, number],
-    population: 532, // Jumlah Penduduk
-    riskLevel: "high",
-    description:
-      "Dusun Dogongan berada di zona risiko tinggi, evakuasi prioritas",
-    jumlahKK: 190,
-    jumlahLakiLaki: 257,
-    jumlahPerempuan: 275,
-    jumlahBalita: 23,
-    jumlahLansia: 98,
-    jumlahIbuHamil: 2,
-    jumlahPenyandangDisabilitas: 6,
-    jumlahPendudukMiskin: 86,
-  },
-  {
-    id: 9,
-    name: "Dusun Ketos",
-    position: [-7.9463378,110.3814805] as [number, number],
-    population: 543, // Jumlah Penduduk
-    riskLevel: "high",
-    description: "Dusun Ketos terletak di area dengan potensi bahaya tinggi",
-    jumlahKK: 215,
-    jumlahLakiLaki: 260,
-    jumlahPerempuan: 283,
-    jumlahBalita: 20,
-    jumlahLansia: 121,
-    jumlahIbuHamil: 1,
-    jumlahPenyandangDisabilitas: 4,
-    jumlahPendudukMiskin: 89,
-  },
-  {
-    id: 10,
-    name: "Dusun Ngrancah",
-    position: [-7.948198, 110.385714] as [number, number], // Koordinat sama dengan Miri? Pastikan ini benar.
-    population: 638, // Jumlah Penduduk
-    riskLevel: "medium",
-    description: "Dusun Ngrancah memerlukan monitoring berkala",
-    jumlahKK: 243,
-    jumlahLakiLaki: 307,
-    jumlahPerempuan: 331,
-    jumlahBalita: 18,
-    jumlahLansia: 167,
-    jumlahIbuHamil: 3,
-    jumlahPenyandangDisabilitas: 15,
-    jumlahPendudukMiskin: 92,
-  },
-  {
-    id: 11,
-    name: "Dusun Pengkol",
-    position: [-7.9450995, 110.3979074] as [number, number],
-    population: 288, // Jumlah Penduduk
-    riskLevel: "medium",
-    description: "Dusun Pengkol berada di area transisi dengan risiko sedang",
-    jumlahKK: 111,
-    jumlahLakiLaki: 141,
-    jumlahPerempuan: 147,
-    jumlahBalita: 8,
-    jumlahLansia: 72,
-    jumlahIbuHamil: 1,
-    jumlahPenyandangDisabilitas: 5,
-    jumlahPendudukMiskin: 32,
-  },
-  {
-    id: 12,
-    name: "Dusun Sompok",
-    position: [-7.9413773, 110.4065744] as [number, number],
-    population: 1007, // Jumlah Penduduk
-    riskLevel: "medium",
-    description: "Dusun Sompok memiliki kondisi yang relatif aman blslsll",
-    jumlahKK: 359,
-    jumlahLakiLaki: 500,
-    jumlahPerempuan: 507,
-    jumlahBalita: 53,
-    jumlahLansia: 202,
-    jumlahIbuHamil: 3,
-    jumlahPenyandangDisabilitas: 15,
-    jumlahPendudukMiskin: 147,
-  },
-  {
-    id: 13,
-    name: "Dusun Wunut",
-    position: [-7.9493849, 110.4268761] as [number, number],
-    population: 600, // Jumlah Penduduk
-    riskLevel: "medium",
-    description:
-      "Dusun Wunut memerlukan kewaspadaan pada kondisi cuaca ekstrem",
-    jumlahKK: 226,
-    jumlahLakiLaki: 294,
-    jumlahPerempuan: 306,
-    jumlahBalita: 30,
-    jumlahLansia: 130,
-    jumlahIbuHamil: 6,
-    jumlahPenyandangDisabilitas: 2,
-    jumlahPendudukMiskin: 232,
-  },
-];
+// dusunData is now imported from ../data/datadususn
 
 // Custom marker icons based on risk level
 const createCustomIcon = (riskLevel: string) => {
@@ -307,6 +91,8 @@ interface DusunModalProps {
 }
 
 function DusunModal({ isOpen, onClose, dusun }: DusunModalProps) {
+  const router = useRouter();
+  
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -345,6 +131,12 @@ function DusunModal({ isOpen, onClose, dusun }: DusunModalProps) {
   };
 
   const risk = riskColors[d.riskLevel as keyof typeof riskColors];
+
+  const handleViewDetail = () => {
+    if (d) {
+      router.push(`/pages/detail_dusun?id=${d.id}`);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-1000 flex items-center justify-center p-4 bg-black/15 backdrop-blur-sm">
@@ -538,7 +330,23 @@ function DusunModal({ isOpen, onClose, dusun }: DusunModalProps) {
           </div>
 
           {/* Action Buttons */}
-          
+          <div className="flex gap-3">
+            <button
+              onClick={handleViewDetail}
+              className="flex-1 bg-[#044BB1] hover:bg-[#033a8c] text-white px-4 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Lihat Detail Lengkap</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="px-6 py-3 border-2 border-gray-300 hover:border-gray-400 text-gray-700 rounded-lg font-semibold transition-all duration-200"
+            >
+              Tutup
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -556,7 +364,7 @@ function MapController({
   const map = useMap();
 
   useEffect(() => {
-    map.setView(center, zoom);
+    map.setView(center, zoom, { animate: true, duration: 0.5 });
 
     // Calculate bounds from desaBoundary
     const bounds = L.latLngBounds(desaBoundary);
@@ -566,8 +374,8 @@ function MapController({
     map.setMaxBounds(paddedBounds);
 
     // Set min/max zoom levels
-    map.setMinZoom(12);
-    map.setMaxZoom(18);
+    map.setMinZoom(14);
+    map.setMaxZoom(20);
   }, [map, center, zoom]);
 
   return null;
@@ -631,14 +439,20 @@ function BoundaryOverlay() {
   return null;
 }
 
-export default function PetaSriharjo() {
+interface PetaSriharjoProps {
+  selectedDusunId?: number | null;
+  onDusunSelect?: (id: number | null) => void;
+}
+
+export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: PetaSriharjoProps) {
+  const router = useRouter();
   const [selectedDusun, setSelectedDusun] = useState<Dusun | null>(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [mapReady, setMapReady] = useState(false);
   const [mapCenter, setMapCenter] = useState<[number, number]>([
     -7.946, 110.404,
   ]);
-  const [mapZoom, setMapZoom] = useState(13);
+  const [mapZoom, setMapZoom] = useState(14);
 
   useEffect(() => {
     setMapReady(true);
@@ -657,8 +471,35 @@ export default function PetaSriharjo() {
 
   const handleResetToSriharjo = () => {
     setMapCenter(boundaryCenter);
-    setMapZoom(13); // Adjusted zoom level for better fit
+    setMapZoom(14);
   };
+
+  const handleViewDetailFromPopup = (dusun: Dusun) => {
+    router.push(`/pages/detail_dusun?id=${dusun.id}`);
+  };
+
+  const handleOpenModalFromPopup = (dusun: Dusun) => {
+    setSelectedDusun(dusun);
+  };
+
+  // Update map when selectedDusunId changes from parent
+  useEffect(() => {
+    if (selectedDusunId === null) {
+      setMapCenter(boundaryCenter);
+      setMapZoom(14);
+    } else {
+      const selectedDusun = dusunData.find(d => d.id === selectedDusunId);
+      if (selectedDusun) {
+        setMapCenter(selectedDusun.position);
+        setMapZoom(17);
+      }
+    }
+  }, [selectedDusunId, boundaryCenter]);
+
+  // Filter markers berdasarkan dusun yang dipilih
+  const filteredDusunData = selectedDusunId 
+    ? dusunData.filter(d => d.id === selectedDusunId)
+    : dusunData;
 
   if (!mapReady) {
     return (
@@ -675,7 +516,7 @@ export default function PetaSriharjo() {
     <div className="relative w-full h-full">
       <MapContainer
         center={boundaryCenter}
-        zoom={13}
+        zoom={14}
         className="w-full h-full rounded-xl"
         style={{ height: "100%", width: "100%", zIndex: 1 }}
         zoomControl={false}
@@ -759,8 +600,8 @@ export default function PetaSriharjo() {
                 </div>
                 <div className="border-t border-gray-200 pt-2 mt-2">
                   <div className="flex items-center space-x-2">
-                    <div className="w-8 h-0.5 bg-[#044BB1]"></div>
-                    <span className="text-sm text-gray-700">Batas Desa</span>
+                    
+                  
                   </div>
                 </div>
               </div>
@@ -830,15 +671,12 @@ export default function PetaSriharjo() {
           }}
         />
 
-        {/* Markers untuk setiap dusun dengan label permanen */}
-        {dusunData.map((dusun) => (
+        {/* Markers untuk setiap dusun dengan label permanen - FILTERED */}
+        {filteredDusunData.map((dusun) => (
           <Marker
             key={dusun.id}
             position={dusun.position}
             icon={createCustomIcon(dusun.riskLevel)}
-            eventHandlers={{
-              click: () => setSelectedDusun(dusun),
-            }}
           >
             {/* Tooltip permanen menampilkan nama dusun */}
             <Tooltip
@@ -871,7 +709,7 @@ export default function PetaSriharjo() {
             </Tooltip>
 
             {/* Popup detail saat marker diklik */}
-            <Popup>
+            <Popup maxWidth={280}>
               <div className="p-2 min-w-[220px]">
                 <h3 className="font-bold text-[#044BB1] mb-2 text-base">
                   {dusun.name}
@@ -933,7 +771,7 @@ export default function PetaSriharjo() {
                   </div>
                   <div className="flex items-start space-x-2 pt-1">
                     <svg
-                      className="w-4 h-4 text-gray-600 mt-0.5"
+                      className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -948,25 +786,52 @@ export default function PetaSriharjo() {
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => setSelectedDusun(dusun)}
-                  className="mt-3 w-full bg-[#044BB1] hover:bg-[#033a8c] text-white px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => handleOpenModalFromPopup(dusun)}
+                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-1"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <span>Lihat Detail Lengkap</span>
-                </button>
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                    <span>Info Lengkap</span>
+                  </button>
+                  <button
+                    onClick={() => handleViewDetailFromPopup(dusun)}
+                    className="flex-1 bg-[#044BB1] hover:bg-[#033a8c] text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-1"
+                  >
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span>Detail Halaman</span>
+                  </button>
+                </div>
               </div>
             </Popup>
           </Marker>
@@ -1021,4 +886,4 @@ export default function PetaSriharjo() {
       />
     </div>
   );
-} 
+}

@@ -41,25 +41,13 @@ export default function Navbar() {
     <nav
       className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
         isScrolled ? "shadow-2xl border-b-2" : "shadow-lg border-b-4"
-      } border-[#044BB1]`}
+      } border-[#2e68b8ab]`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Left side - Live Map & Last Update */}
           <div className="flex items-center space-x-3">
-            {/* Live Map Badge */}
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-linear-to-r from-red-500 to-orange-500 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-              <div className="relative bg-linear-to-r from-[#044BB1] to-[#0566d6] rounded-xl px-4 py-2.5 shadow-lg transform transition-all duration-300 hover:scale-105">
-                <div className="flex items-center space-x-2">
-                  <div className="relative flex items-center justify-center">
-                    <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></div>
-                    <div className="absolute w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></div>
-                  </div>
-                 
-                </div>
-              </div>
-            </div>
+            
 
             {/* Last Update Card */}
             
@@ -67,18 +55,18 @@ export default function Navbar() {
 
           {/* Center - Logo & Title */}
           <div className="absolute left-1/2 transform -translate-x-1/2">
-            <div className="flex items-center space-x-3 group cursor-pointer">
+            <div className="flex items-center space-x-3 group ">
               {/* Logo with glow effect */}
               <div className="relative">
                 <div className="absolute -inset-1 bg-linear-to-r from-[#044BB1] to-[#0566d6] rounded-full blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
-                <div className="relative w-14 h-14 bg-linear-to-br from-[#044BB1] via-[#0555c4] to-[#0566d6] rounded-full flex items-center justify-center shadow-xl transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 border-2 border-white">
+                <div className="relative w-16 h-16 bg-linear-to-br from-[#044BB1] via-[#0555c4] to-[#0566d6] rounded-full flex items-center justify-center shadow-xl ">
                   {/* You can replace this with an actual logo image */}
                   {/* <span className="text-white font-black text-2xl drop-shadow-lg">T</span> */}
                   {/* Uncomment below to use an image logo */}
                   <img 
                     src="./tagana_logo.png" 
                     alt="Tagana Logo" 
-                    className="w-11 h-11 object-contain"
+                    className="w-14 h-14 object-contain"
                   />
                 </div>
               </div>
@@ -86,7 +74,7 @@ export default function Navbar() {
               {/* Title with gradient */}
               <div className="flex flex-col">
                 <h1 className="text-2xl sm:text-3xl font-black bg-linear-to-r from-[#044BB1] to-[#0566d6] bg-clip-text text-transparent tracking-tight leading-tight drop-shadow-sm">
-                  TAGANA
+                  TAGANA ppk
                 </h1>
                 <div className="flex items-center space-x-1 -mt-1">
                   <div className="w-1.5 h-1.5 bg-[#044BB1] rounded-full"></div>
@@ -103,6 +91,10 @@ export default function Navbar() {
             {/* Desktop Menu Button */}
             
             {/* Mobile menu button */}
+            <div>
+              {/* Placeholder for future mobile menu button */}
+              
+            </div>
             
           </div>
         </div>
@@ -111,7 +103,6 @@ export default function Navbar() {
       </div>
 
       {/* Decorative bottom border */}
-      <div className="h-1 bg-linear-to-r from-transparent via-[#044BB1] to-transparent opacity-50"></div>
     </nav>
   );
 }
