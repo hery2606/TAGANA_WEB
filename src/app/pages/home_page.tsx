@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import Navbar from './navbar';
-import { InfoModal } from './modals';
+import Navbar from '../components/navbar';
+import { InfoModal } from '../components/modals_desa';
 
 // Dynamic import for Leaflet map to avoid SSR issues
 const PetaSriharjo = dynamic(() => import('./petasriharjo'), {

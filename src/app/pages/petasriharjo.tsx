@@ -4,8 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon, LayersControl, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { InfoModal } from "./modals";
-import { desaBoundary } from "./PetaSriharjoBoundary";
+import { InfoModal } from "../components/modals_desa";
+import { desaBoundary } from "../data/PetaSriharjoBoundary";
 
 // Fix default marker icon issue in Next.js
 if (typeof window !== "undefined") {
