@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon, LayersControl, Tooltip } from "react-leaflet";
 import L from "leaflet";
@@ -453,21 +453,30 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
     -7.946, 110.404,
   ]);
   const [mapZoom, setMapZoom] = useState(14);
+  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    setMapReady(true);
-  }, []);
-
-  // Calculate center point of Sriharjo boundary
-  const calculateBoundaryCenter = (): [number, number] => {
+  // Calculate center point of Sriharjo boundary - Use useMemo to prevent recalculation
+  const boundaryCenter = useMemo((): [number, number] => {
     const lats = desaBoundary.map((coord) => coord[0]);
     const lngs = desaBoundary.map((coord) => coord[1]);
     const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
     const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
     return [centerLat, centerLng];
-  };
+  }, []); // Empty dependency array since desaBoundary is static
 
-  const boundaryCenter = calculateBoundaryCenter();
+  useEffect(() => {
+    setMapReady(true);
+    
+    // Detect mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleResetToSriharjo = () => {
     setMapCenter(boundaryCenter);
@@ -482,7 +491,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
     setSelectedDusun(dusun);
   };
 
-  // Update map when selectedDusunId changes from parent
+  // Update map when selectedDusunId changes from parent - FIX: Add proper dependencies
   useEffect(() => {
     if (selectedDusunId === null) {
       setMapCenter(boundaryCenter);
@@ -494,7 +503,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
         setMapZoom(17);
       }
     }
-  }, [selectedDusunId, boundaryCenter]);
+  }, [selectedDusunId]); // Remove boundaryCenter from dependencies
 
   // Filter markers berdasarkan dusun yang dipilih
   const filteredDusunData = selectedDusunId 
@@ -516,22 +525,23 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
     <div className="relative w-full h-full">
       <MapContainer
         center={boundaryCenter}
-        zoom={14}
-        className="w-full h-full rounded-xl"
+        zoom={isMobile ? 13 : 14}
+        className="w-full h-full rounded-none md:rounded-xl"
         style={{ height: "100%", width: "100%", zIndex: 1 }}
         zoomControl={false}
         scrollWheelZoom={true}
         doubleClickZoom={true}
         dragging={true}
+        touchZoom={true}
       >
         <MapController center={mapCenter} zoom={mapZoom} />
         <BoundaryOverlay />
 
-        {/* All Controls Container - Same z-index level */}
+        {/* All Controls Container - Responsive positioning */}
         <div className="leaflet-control-container" style={{ zIndex: 500 }}>
-          {/* Zoom Controls */}
-          <div className="leaflet-top leaflet-left">
-            <div className="leaflet-control-zoom leaflet-bar leaflet-control bg-white shadow-lg border border-gray-200">
+          {/* Zoom Controls - Responsive */}
+          <div className="leaflet-top leaflet-left ">
+            <div className="leaflet-control-zoom leaflet-bar leaflet-control bg-white shadow-2xl border border-gray-200 scale-90 md:scale-100 origin-top-left ml-1 mt-1 md:ml-2 md:mt-2">
               <a
                 className="leaflet-control-zoom-in text-[#044BB1] hover:bg-gray-50"
                 href="#"
@@ -563,53 +573,82 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
             </div>
           </div>
 
-          {/* Map Controls - Top Right */}
-          
-
-          {/* Legend - Bottom Left */}
-          <div className="leaflet-bottom leaflet-left">
-            <div className="leaflet-control bg-white rounded-xl shadow-xl p-4 max-w-xs border border-gray-200 mb-2 ml-2">
-              <h3 className="font-bold text-gray-800 mb-3 flex items-center">
-                <svg
-                  className="w-5 h-5 mr-2 text-[#044BB1]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                  />
-                </svg>
-                Legenda
+            {/* Legend - Enhanced with More Items */}
+            <div className="leaflet-bottom leaflet-left">
+            <div className={`leaflet-control bg-white rounded-lg md:rounded-xl shadow-xl p-3 md:p-4 max-w-[180px] md:max-w-sm border-2 border-gray-200 mb-1 md:mb-2 ml-1 md:ml-2 ${isMobile ? 'text-xs' : ''}`}>
+              <h3 className="font-bold text-gray-800 mb-2 md:mb-3 flex items-center text-sm md:text-base border-b-2 border-[#044BB1] pb-2">
+              <svg
+                className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2 text-[#044BB1] flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                />
+              </svg>
+              <span className="truncate">Legenda Peta</span>
               </h3>
-              <div className="space-y-2">
+              
+              <div className="space-y-3 md:space-y-3">
+              {/* Zona Risiko Section */}
+              <div>
+                <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Zona Risiko</p>
+                <div className="space-y-1.5">
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow"></div>
-                  <span className="text-sm text-gray-700">Zona Aman</span>
+                  <div className="w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
+                  <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Aman</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-yellow-500 rounded-full border-2 border-white shadow"></div>
-                  <span className="text-sm text-gray-700">Zona Waspada</span>
+                  <div className="w-3 h-3 md:w-4 md:h-4 bg-yellow-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
+                  <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Waspada</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow"></div>
-                  <span className="text-sm text-gray-700">Zona Bahaya</span>
+                  <div className="w-3 h-3 md:w-4 md:h-4 bg-red-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
+                  <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Bahaya</span>
                 </div>
-                <div className="border-t border-gray-200 pt-2 mt-2">
-                  <div className="flex items-center space-x-2">
-                    
-                  
-                  </div>
                 </div>
               </div>
+
+              {/* mark peta */}
+              
+
+              {/* Batas & Jalur Section */}
+              <div className="border-t border-gray-200 pt-2">
+                <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Batas & Jalur</p>
+                <div className="space-y-1.5">
+                <div className="flex items-center space-x-2">
+                  <div className="flex-shrink-0 w-6 md:w-8 h-0.5 border-t-2 border-dashed white-" ></div>
+                  <span className="text-xs md:text-sm text-gray-700 font-medium">Batas Desa</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-shrink-0 w-6 md:w-8 h-0.5 bg-green-500" style={{ height: '3px' }}></div>
+                  <span className="text-xs md:text-sm text-gray-700 font-medium">Jalur Evakuasi</span>
+                </div>
+                </div>
+              </div>
+
+              {/* Titik Penting Section */}
+              <div className="border-t border-gray-200 pt-2">
+                <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Titik Penting</p>
+                <div className="space-y-1.5">
+                <div className="flex items-center space-x-2">
+                  <div className="flex-shrink-0 w-3 h-3 md:w-4 md:h-4 bg-blue-600 rounded-sm border-2 border-white shadow-md flex items-center justify-center">
+                  <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-white rounded-full"></div>
+                  </div>
+                  <span className="text-xs md:text-sm text-gray-700 font-medium">Titik Kumpul</span>
+                </div>
+                </div>
+              </div>
+              </div>
             </div>
-          </div>
+            </div>
         </div>
 
-        {/* Layer Control with Satellite and Street View */}
+        {/* Layer Control - Responsive positioning */}
         <LayersControl position="topright">
           <LayersControl.BaseLayer name="Peta Jalan">
             <TileLayer
@@ -620,7 +659,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
 
           <LayersControl.BaseLayer checked name="Satelit">
             <TileLayer
-              attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+              attribution=""
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
               maxZoom={18}
             />
@@ -628,14 +667,11 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
 
           <LayersControl.BaseLayer name="Satelit + Label">
             <TileLayer
-              attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+              attribution=""
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
               maxZoom={18}
             />
-            <TileLayer
-              attribution=""
-              url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-            />
+            
           </LayersControl.BaseLayer>
 
           <LayersControl.BaseLayer name="Terrain">
@@ -651,10 +687,9 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
         <Polyline
           positions={desaBoundary}
           pathOptions={{
-            color: "#FFFF00",
-            weight: 4,
+            color: "#FFFFFF",
+            weight: 2,
             opacity: 1,
-            dashArray: "10, 5",
             lineCap: "round",
             lineJoin: "round",
           }}
@@ -682,13 +717,13 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
             <Tooltip
               permanent
               direction="top"
-              offset={[0, -40]}
+              offset={[0, isMobile ? -30 : -40]}
               className="custom-tooltip"
             >
               <div
                 style={{
                   background: "white",
-                  padding: "4px 8px",
+                  padding: isMobile ? "2px 6px" : "4px 8px",
                   borderRadius: "4px",
                   boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
                   border: `2px solid ${
@@ -699,7 +734,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
                       : "#ef4444"
                   }`,
                   fontWeight: "bold",
-                  fontSize: "11px",
+                  fontSize: isMobile ? "9px" : "11px",
                   color: "#1f2937",
                   whiteSpace: "nowrap",
                 }}
@@ -709,7 +744,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
             </Tooltip>
 
             {/* Popup detail saat marker diklik */}
-            <Popup maxWidth={280}>
+            <Popup maxWidth={isMobile ? 240 : 280}>
               <div className="p-2 min-w-[220px]">
                 <h3 className="font-bold text-[#044BB1] mb-2 text-base">
                   {dusun.name}
@@ -838,7 +873,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
         ))}
       </MapContainer>
 
-      {/* Add custom CSS for tooltips */}
+      {/* Custom CSS - Enhanced with mobile responsiveness */}
       <style jsx global>{`
         .custom-tooltip {
           background: transparent !important;
@@ -853,26 +888,47 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
         .leaflet-tooltip-right.custom-tooltip::before {
           display: none !important;
         }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+          .leaflet-control-layers {
+            transform: scale(0.85);
+            transform-origin: top right;
+            margin: 4px !important;
+          }
+          
+          .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+          }
+          
+          .leaflet-popup-content {
+            margin: 8px 10px;
+            font-size: 13px;
+          }
+          
+          .leaflet-container {
+            font-size: 12px;
+          }
+          
+          /* Make layer control more compact */
+          .leaflet-control-layers-list {
+            font-size: 12px;
+          }
+          
+          /* Adjust marker size for mobile */
+          .custom-marker {
+            transform: scale(0.85);
+          }
+        }
+        
+        /* Ensure map takes full height on mobile */
+        @media (max-width: 768px) {
+          .leaflet-container {
+            height: 100vh !important;
+            height: 100dvh !important; /* Dynamic viewport height for mobile browsers */
+          }
+        }
       `}</style>
-
-      {/* Boundary Overlay Div - Lower z-index than controls */}
-      <div className="absolute inset-0 pointer-events-none z-10">
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{
-            background: `
-              radial-gradient(
-                ellipse at center,
-                transparent 40%,
-                rgba(0,0,0,0.1) 60%,
-                rgba(0,0,0,0.2) 80%,
-                rgba(0,0,0,0.5) 100%
-              )
-            `,
-            mixBlendMode: "multiply",
-          }}
-        />
-      </div>
 
       {/* Modals - Highest z-index */}
       <DusunModal

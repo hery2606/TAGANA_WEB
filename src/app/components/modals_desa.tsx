@@ -268,19 +268,19 @@ export function InfoModal({ isOpen, onClose }: ModalProps) {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Balita (0-5 tahun)</span>
-                    <span className="font-semibold">{totalBalita}</span>
+                    <span className="font-semibold text-gray-600">{totalBalita}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Lansia (&gt;60 tahun)</span>
-                    <span className="font-semibold">{totalLansia}</span>
+                    <span className="font-semibold text-gray-600">{totalLansia}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Ibu Hamil</span>
-                    <span className="font-semibold">{totalIbuHamil}</span>
+                    <span className="font-semibold text-gray-600">{totalIbuHamil}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Penyandang Disabilitas</span>
-                    <span className="font-semibold">{totalDisabilitas}</span>
+                    <span className="font-semibold text-gray-600">{totalDisabilitas}</span>
                   </div>
                   <div className="flex justify-between border-t pt-2">
                     <span className="text-gray-600 font-medium">Penduduk Miskin</span>

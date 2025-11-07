@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Navbar from '../components/navbar';
 import { InfoModal } from '../components/modals_desa';
 import { dusunData } from '../data/datadususn';
+import Footer from '../components/footer/page';
 
 const PetaSriharjo = dynamic(() => import('./petasriharjo'), {
   ssr: false,
@@ -126,7 +127,7 @@ export default function HomePage() {
           {/* Statistics Section */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             {/* Zona Bahaya */}
-            <div className="bg-white rounded-xl shadow p-6 border-l-4 border-red-500">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-3xl">⚠️</span>
                 <span className="text-3xl font-bold text-red-600">12</span>
@@ -136,7 +137,7 @@ export default function HomePage() {
             </div>
 
             {/* Zona Waspada */}
-            <div className="bg-white rounded-xl shadow p-6 border-l-4 border-yellow-500">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-3xl">⚡</span>
                 <span className="text-3xl font-bold text-yellow-600">28</span>
@@ -146,7 +147,7 @@ export default function HomePage() {
             </div>
 
             {/* Zona Aman */}
-            <div className="bg-white rounded-xl shadow p-6 border-l-4 border-green-500">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-3xl">✅</span>
                 <span className="text-3xl font-bold text-green-600">45</span>
@@ -159,13 +160,13 @@ export default function HomePage() {
           {/* Info Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Legenda */}
-            <div className="bg-white rounded-xl shadow p-6">
+            <div className="bg-white rounded-xl shadow-[1px_1px_41px_2px_rgba(17,_12,_46,_0.15)] p-6">
               <h1 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                 
                 <span>Legenda Zona</span>
               </h1>
               <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
+                <div className="flex items-center gap-3 p-3 bg-red-100 rounded-lg">
                   <div className="w-4 h-4 bg-red-500 rounded-full"></div>
                   <div>
                     <p className="font-semibold text-sm text-red-700">Zona Bahaya Tinggi</p>
@@ -173,7 +174,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg">
+                <div className="flex items-center gap-3 p-3 bg-yellow-100 rounded-lg">
                   <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
                   <div>
                     <p className="font-semibold text-sm text-yellow-700">Zona Waspada</p>
@@ -181,7 +182,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                <div className="flex items-center gap-3 p-3 bg-green-100 rounded-lg">
                   <div className="w-4 h-4 bg-green-500 rounded-full"></div>
                   <div>
                     <p className="font-semibold text-sm text-green-700">Zona Aman</p>
@@ -192,25 +193,25 @@ export default function HomePage() {
             </div>
 
             {/* Statistik Desa */}
-            <div className="bg-white rounded-xl shadow p-6">
+            <div className="bg-white rounded-xl shadow-[1px_1px_41px_2px_rgba(17,_12,_46,_0.15)] p-6">
               <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                 <span>📊</span>
                 <span>Statistik Desa</span>
               </h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                <div className="flex justify-between items-center p-3 bg-blue-100 rounded-lg">
                   <span className="text-sm font-medium text-gray-700">Total Dusun</span>
                   <span className="text-lg font-bold text-[#044BB1]">13</span>
                 </div>
 
                 
 
-                <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                <div className="flex justify-between items-center p-3 bg-purple-100 rounded-lg">
                   <span className="text-sm font-medium text-gray-700">Anggota TAGANA</span>
                   <span className="text-lg font-bold text-purple-600">20</span>
                 </div>
 
-                <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                <div className="flex justify-between items-center p-3 bg-orange-100 rounded-lg">
                   <span className="text-sm font-medium text-gray-700">Total Penduduk</span>
                   <span className="text-lg font-bold text-orange-600">9.417</span>
                 </div>
@@ -219,9 +220,13 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+      {/* Footer */}
+      <Footer />
 
       {/* Modal */}
       <InfoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
+
+      
   );
 }
