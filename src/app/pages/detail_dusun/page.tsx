@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { dusunData, Dusun } from "../../data/datadususn";
+import { getDusunImageById, getDusunAltText } from "../../data/image";
 import dynamic from "next/dynamic";
 import Footer from "@/app/components/footer/page";
 
@@ -41,6 +42,7 @@ function DetailDusunContent() {
   const dusunId = searchParams.get("id");
   const [dusun, setDusun] = useState<Dusun | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     if (dusunId) {
@@ -119,9 +121,18 @@ function DetailDusunContent() {
           {/* Photo Container */}
             <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl mb-8">
             <img 
-              src="/background.png" 
-              alt={`Foto ${dusun.name}`}
-              className="w-full h-full object-cover"
+              src={imageError ? "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80" : getDusunImageById(dusun.id)}
+              alt={getDusunAltText(dusun.id)}
+              className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+              onError={(e) => {
+                console.error(`Image failed to load for ${dusun.name} (ID: ${dusun.id})`);
+                setImageError(true);
+                const target = e.target as HTMLImageElement;
+                target.src = "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80";
+              }}
+              onLoad={() => {
+                console.log(`Image loaded successfully for ${dusun.name}`);
+              }}
             />
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>

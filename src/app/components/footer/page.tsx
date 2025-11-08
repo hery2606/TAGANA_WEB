@@ -11,23 +11,23 @@ export default function Footer() {
 
   const developers = [
     { 
-      name: "Heri", 
-      role: "Lead Developer",
-      initial: "H",
-      color: "from-blue-500 to-blue-600"
-    },
-    { 
       name: "Naufal Adna", 
-      role: "Full Stack Developer",
+      role: "mapper & Backend Developer",
       initial: "N",
       color: "from-indigo-500 to-indigo-600"
     },
     { 
       name: "Sagara", 
-      role: "Frontend Developer",
+      role: "Layout Designer",
       initial: "S",
       color: "from-cyan-500 to-cyan-600"
-    }
+    },
+    { 
+      name: "Heri", 
+      role: "Frontend Developer",
+      initial: "H",
+      color: "from-blue-500 to-blue-600"
+    },
   ];
 
   return (

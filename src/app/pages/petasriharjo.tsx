@@ -454,6 +454,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
   ]);
   const [mapZoom, setMapZoom] = useState(14);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLegendMinimized, setIsLegendMinimized] = useState(false);
 
   // Calculate center point of Sriharjo boundary - Use useMemo to prevent recalculation
   const boundaryCenter = useMemo((): [number, number] => {
@@ -525,7 +526,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
     <div className="relative w-full h-full">
       <MapContainer
         center={boundaryCenter}
-        zoom={isMobile ? 13 : 14}
+        zoom={isMobile ? 13.5 : 14}
         className="w-full h-full rounded-none md:rounded-xl"
         style={{ height: "100%", width: "100%", zIndex: 1 }}
         zoomControl={false}
@@ -573,79 +574,101 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
             </div>
           </div>
 
-            {/* Legend - Enhanced with More Items */}
-            <div className="leaflet-bottom leaflet-left">
-            <div className={`leaflet-control bg-white rounded-lg md:rounded-xl shadow-xl p-3 md:p-4 max-w-[180px] md:max-w-sm border-2 border-gray-200 mb-1 md:mb-2 ml-1 md:ml-2 ${isMobile ? 'text-xs' : ''}`}>
-              <h3 className="font-bold text-gray-800 mb-2 md:mb-3 flex items-center text-sm md:text-base border-b-2 border-[#044BB1] pb-2">
-              <svg
-                className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2 text-[#044BB1] flex-shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                />
-              </svg>
-              <span className="truncate">Legenda Peta</span>
-              </h3>
-              
-              <div className="space-y-3 md:space-y-3">
-              {/* Zona Risiko Section */}
-              <div>
-                <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Zona Risiko</p>
-                <div className="space-y-1.5">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
-                  <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Aman</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-yellow-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
-                  <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Waspada</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 md:w-4 md:h-4 bg-red-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
-                  <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Bahaya</span>
-                </div>
-                </div>
-              </div>
-
-              {/* mark peta */}
-              
-
-              {/* Batas & Jalur Section */}
-              <div className="border-t border-gray-200 pt-2">
-                <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Batas & Jalur</p>
-                <div className="space-y-1.5">
-                <div className="flex items-center space-x-2">
-                  <div className="flex-shrink-0 w-6 md:w-8 h-0.5 border-t-2 border-dashed white-" ></div>
-                  <span className="text-xs md:text-sm text-gray-700 font-medium">Batas Desa</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="flex-shrink-0 w-6 md:w-8 h-0.5 bg-green-500" style={{ height: '3px' }}></div>
-                  <span className="text-xs md:text-sm text-gray-700 font-medium">Jalur Evakuasi</span>
-                </div>
-                </div>
-              </div>
-
-              {/* Titik Penting Section */}
-              <div className="border-t border-gray-200 pt-2">
-                <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Titik Penting</p>
-                <div className="space-y-1.5">
-                <div className="flex items-center space-x-2">
-                  <div className="flex-shrink-0 w-3 h-3 md:w-4 md:h-4 bg-blue-600 rounded-sm border-2 border-white shadow-md flex items-center justify-center">
-                  <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-white rounded-full"></div>
+          {/* Legend - Enhanced with minimize button */}
+          <div className="leaflet-bottom leaflet-left">
+            <div className={`leaflet-control bg-white rounded-lg md:rounded-xl shadow-xl border-2 border-gray-200 mb-1 md:mb-2 ml-1 md:ml-2 transition-all duration-300 ${isLegendMinimized ? 'p-2' : 'p-3 md:p-4'} ${isLegendMinimized ? 'max-w-[40px]' : 'max-w-[180px] md:max-w-sm'} ${isMobile ? 'text-xs' : ''}`}>
+              {isLegendMinimized ? (
+                <button
+                  onClick={() => setIsLegendMinimized(false)}
+                  className="w-full h-full flex items-center justify-center text-[#044BB1] hover:bg-gray-50 rounded transition-colors"
+                  title="Tampilkan Legenda"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                </button>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between mb-2 md:mb-3">
+                    <h3 className="font-bold text-gray-800 flex items-center text-sm md:text-base border-b-2 border-[#044BB1] pb-2 flex-1">
+                      <svg
+                        className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2 text-[#044BB1] flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                        />
+                      </svg>
+                      <span className="truncate">Legenda Peta</span>
+                    </h3>
+                    <button
+                      onClick={() => setIsLegendMinimized(true)}
+                      className="ml-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded p-1 transition-colors flex-shrink-0"
+                      title="Sembunyikan Legenda"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
-                  <span className="text-xs md:text-sm text-gray-700 font-medium">Titik Kumpul</span>
-                </div>
-                </div>
-              </div>
-              </div>
+                  
+                  <div className="space-y-3 md:space-y-3">
+                    {/* Zona Risiko Section */}
+                    <div>
+                      <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Zona Risiko</p>
+                      <div className="space-y-1.5">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
+                          <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Aman</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-3 h-3 md:w-4 md:h-4 bg-yellow-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
+                          <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Waspada</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-3 h-3 md:w-4 md:h-4 bg-red-500 rounded-full border-2 border-white shadow-md flex-shrink-0"></div>
+                          <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Bahaya</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Batas & Jalur Section */}
+                    <div className="border-t border-gray-200 pt-2">
+                      <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Batas & Jalur</p>
+                      <div className="space-y-1.5">
+                        <div className="flex items-center space-x-2">
+                          <div className="flex-shrink-0 w-6 md:w-8 h-0.5 border-t-2 border-dashed white-" ></div>
+                          <span className="text-xs md:text-sm text-gray-700 font-medium">Batas Desa</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="flex-shrink-0 w-6 md:w-8 h-0.5 bg-green-500" style={{ height: '3px' }}></div>
+                          <span className="text-xs md:text-sm text-gray-700 font-medium">Jalur Evakuasi</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Titik Penting Section */}
+                    <div className="border-t border-gray-200 pt-2">
+                      <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Titik Penting</p>
+                      <div className="space-y-1.5">
+                        <div className="flex items-center space-x-2">
+                          <div className="flex-shrink-0 w-3 h-3 md:w-4 md:h-4 bg-blue-600 rounded-sm border-2 border-white shadow-md flex items-center justify-center">
+                            <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-white rounded-full"></div>
+                          </div>
+                          <span className="text-xs md:text-sm text-gray-700 font-medium">Titik Kumpul</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
-            </div>
+          </div>
         </div>
 
         {/* Layer Control - Responsive positioning */}
@@ -822,31 +845,6 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
                   </div>
                 </div>
                 <div className="flex gap-2 mt-3">
-                  <button
-                    onClick={() => handleOpenModalFromPopup(dusun)}
-                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-1"
-                  >
-                    <svg
-                      className="w-3.5 h-3.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    <span>Info Lengkap</span>
-                  </button>
                   <button
                     onClick={() => handleViewDetailFromPopup(dusun)}
                     className="flex-1 bg-[#044BB1] hover:bg-[#033a8c] text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-1"
