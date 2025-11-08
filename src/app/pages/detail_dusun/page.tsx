@@ -117,15 +117,11 @@ function DetailDusunContent() {
       <div className="relative bg-white shadow-md overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Photo Container */}
-          <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl mb-8">
-            <img
-              src={dusun.image || "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80"}
+            <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl mb-8">
+            <img 
+              src="/background.png" 
               alt={`Foto ${dusun.name}`}
-              className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "https://images.unsplash.com/photo-1560493676-04071c5f467b?w=1200&auto=format&fit=crop&q=80";
-              }}
+              className="w-full h-full object-cover"
             />
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
@@ -133,20 +129,20 @@ function DetailDusunContent() {
             {/* Title Overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
               <div className="flex items-center space-x-3 mb-3">
-                <div className="bg-white/20 backdrop-blur-md rounded-lg p-2">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                </div>
-                <h2 className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold drop-shadow-lg">
-                  {dusun.name}
-                </h2>
+              <div className="bg-white/20 backdrop-blur-md rounded-lg p-2">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </div>
+              <h2 className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold drop-shadow-lg">
+                {dusun.name}
+              </h2>
               </div>
               <p className="text-white/90 text-sm sm:text-base max-w-2xl drop-shadow-md">
-                Dusun dengan populasi {dusun.population} jiwa
+              Dusun dengan populasi {dusun.population} jiwa
               </p>
             </div>
-          </div>
+            </div>
 
           {/* Description Card */}
           <div className="max-w-5xl mx-auto">
