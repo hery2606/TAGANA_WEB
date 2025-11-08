@@ -16,73 +16,73 @@ export const dusunImages: DusunImage[] = [
   {
     id: 2,
     name: "Dusun Jati",
-    imagePath: "/jati.jpeg",
+    imagePath: "/jati.png",
     altText: "Pemandangan Dusun Jati"
   },
   {
     id: 3,
     name: "Dusun Mojohuro",
-    imagePath: "/mojohuro.jpeg",
+    imagePath: "/mojohuro.png",
     altText: "Pemandangan Dusun Mojohuro"
   },
   {
     id: 4,
     name: "Dusun Pelemadu",
-    imagePath: "/pelemadu.jpeg",
+    imagePath: "/pelemadu.png",
     altText: "Pemandangan Dusun Pelemadu"
   },
   {
     id: 5,
     name: "Dusun Sungapan",
-    imagePath: "/sungapan.jpeg",
+    imagePath: "/sungapan.png",
     altText: "Pemandangan Dusun Sungapan"
   },
   {
     id: 6,
     name: "Dusun Gondosuli",
-    imagePath: "/gondosuli.jpeg",
+    imagePath: "/gondosuli.png",
     altText: "Pemandangan Dusun Gondosuli"
   },
   {
     id: 7,
     name: "Dusun Trukan",
-    imagePath: "/trukan.jpeg",
+    imagePath: "/trukan.png",
     altText: "Pemandangan Dusun Trukan"
   },
   {
     id: 8,
     name: "Dusun Dogongan",
-    imagePath: "/dogongan.jpeg",
+    imagePath: "/dogongan.png",
     altText: "Pemandangan Dusun Dogongan"
   },
   {
     id: 9,
     name: "Dusun Ketos",
-    imagePath: "/ketos.jpeg",
+    imagePath: "/ketos.png",
     altText: "Pemandangan Dusun Ketos"
   },
   {
     id: 10,
     name: "Dusun Ngrancah",
-    imagePath: "/ngrancah.jpeg",
+    imagePath: "/gambar_desa1.jpeg",
     altText: "Pemandangan Dusun Ngrancah"
   },
   {
     id: 11,
     name: "Dusun Pengkol",
-    imagePath: "/pengkol.jpeg",
+    imagePath: "/pengkol.png",
     altText: "Pemandangan Dusun Pengkol"
   },
   {
     id: 12,
     name: "Dusun Sompok",
-    imagePath: "/sompok.jpeg",
+    imagePath: "/sompok.png",
     altText: "Pemandangan Dusun Sompok"
   },
   {
     id: 13,
     name: "Dusun Wunut",
-    imagePath: "/wunut.jpeg",
+    imagePath: "/wunut.png",
     altText: "Pemandangan Dusun Wunut"
   },
 ];
