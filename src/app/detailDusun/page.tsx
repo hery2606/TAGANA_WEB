@@ -321,8 +321,8 @@ function DetailDusunContent() {
                 </div>
                 Tampilan Satelit
               </h3>
-              <div className="h-64 sm:h-80 lg:h-96 rounded-xl overflow-hidden border-2 border-gray-200 shadow-inner">
-                <MapContainer center={dusun.position} zoom={15} className="w-full h-full" scrollWheelZoom={false}>
+              <div className="h-64 sm:h-80 lg:h-96 rounded-xl overflow-hidden border-2 border-gray-200 shadow-inner relative z-0">
+                <MapContainer center={dusun.position} zoom={15} className="w-full h-full" scrollWheelZoom={false} zoomControl={true}>
                 <TileLayer
                   url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
                   maxZoom={18}

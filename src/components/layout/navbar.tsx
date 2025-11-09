@@ -87,19 +87,9 @@ export default function Navbar() {
               onClick={() => setInfoModalOpen(true)}
               className="flex cursor-pointer items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#044BB1] to-[#0566d6] text-white rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300 group"
             >
-              <svg
-                className="w-5 h-5 group-hover:scale-110 transition-transform"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
+            <li className="w-5 h-5 flex items-center justify-center text-xl font-extrabold leading-none group-hover:scale-110 transition-transform">
+                !
+                </li>
               <span className="font-semibold">Info</span>
             </button>
           </div>

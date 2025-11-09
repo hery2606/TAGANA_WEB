@@ -2,10 +2,8 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import Navbar from '@/components/layout/navbar';
 import { InfoModal } from '@/components/ui/modal_desa';
 import { dusunData } from '@/data/datadususn';
-import Footer from '@/components/layout/footer';
 
 const PetaSriharjo = dynamic(() => import('./components/petaSriharjo'), {
   ssr: false,
@@ -34,8 +32,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navbar */}
-      {/* <Navbar /> */}
 
       {/* Main Content */}
       <main className="pt-6 pb-8">
@@ -45,6 +41,7 @@ export default function HomePage() {
             x
           </div>
 
+          
           {/* Map Container */}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
             {/* Map Header */}
@@ -229,6 +226,8 @@ export default function HomePage() {
       {/* Modal */}
       <InfoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
+
+    
 
       
   );
