@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import Navbar from '../../components/navbar';
-import { InfoModal } from '../../components/modals_desa';
-import { dusunData } from '../../data/datadususn';
-import Footer from '../../components/footer/page';
+import Navbar from '@/components/layout/navbar';
+import { InfoModal } from '@/components/ui/modal_desa';
+import { dusunData } from '@/data/datadususn';
+import Footer from '@/components/layout/footer';
 
-const PetaSriharjo = dynamic(() => import('../petasriharjo'), {
+const PetaSriharjo = dynamic(() => import('./components/petaSriharjo'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full flex items-center justify-center bg-gray-50">
@@ -35,7 +35,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <Navbar />
+      {/* <Navbar /> */}
 
       {/* Main Content */}
       <main className="pt-6 pb-8">
@@ -222,7 +222,7 @@ export default function HomePage() {
       </main>
       {/* Footer */}
       <div>
-      <Footer />
+      {/* <Footer /> */}
 
       </div>
 

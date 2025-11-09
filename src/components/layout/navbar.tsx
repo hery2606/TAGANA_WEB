@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { InfoModal } from '../components/modals_desa';
+import { InfoModal } from '@/components/ui/modal_desa';
+import Image from "next/image";
 
 export default function Navbar() {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -55,11 +56,14 @@ export default function Navbar() {
               {/* Logo with glow effect */}
               <div className="relative">
                 <div className="absolute -inset-1 bg-linear-to-r from-[#044BB1] to-[#0566d6] rounded-full blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
-                <div className="relative w-16 h-16 bg-linear-to-br from-[#044BB1] via-[#0555c4] to-[#0566d6] rounded-full flex items-center justify-center shadow-xl">
-                  <img 
-                    src="./tagana_logo.png" 
-                    alt="Tagana Logo" 
-                    className="w-14 h-14 object-contain"
+                <div className="border border-blue-700 border-4 relative w-16 h-16 bg-linear-to-br from-[#044BB1] via-[#0555c4] to-[#0566d6] rounded-full flex items-center justify-center shadow-xl">
+                  <Image
+                    src="/tagana_logo.png"
+                    alt="Tagana Logo"
+                    width={60}
+                    height={60}
+                    className="object-contain w-14 h-14"
+                    priority
                   />
                 </div>
               </div>
@@ -81,7 +85,7 @@ export default function Navbar() {
             {/* Right side - Started Page Button */}
             <button
               onClick={() => setInfoModalOpen(true)}
-              className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#044BB1] to-[#0566d6] text-white rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300 group"
+              className="flex cursor-pointer items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#044BB1] to-[#0566d6] text-white rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300 group"
             >
               <svg
                 className="w-5 h-5 group-hover:scale-110 transition-transform"

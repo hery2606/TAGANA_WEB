@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon, LayersControl, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { InfoModal } from "../components/modals_desa";
-import { desaBoundary } from "../data/PetaSriharjoBoundary";
-import { dusunData } from "../data/datadususn";
+import { InfoModal } from "@/components/ui/modal_desa";
+import { desaBoundary } from "@/data/PetaSriharjoBoundary";
+import { dusunData } from "@/data/datadususn";
 
 
 
@@ -134,7 +134,7 @@ function DusunModal({ isOpen, onClose, dusun }: DusunModalProps) {
 
   const handleViewDetail = () => {
     if (d) {
-      router.push(`/pages/detail_dusun?id=${d.id}`);
+      router.push(`/detailDusun?id=${d.id}`);
     }
   };
 
@@ -485,7 +485,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
   };
 
   const handleViewDetailFromPopup = (dusun: Dusun) => {
-    router.push(`/pages/detail_dusun?id=${dusun.id}`);
+    router.push(`/detailDusun?id=${dusun.id}`);
   };
 
   const handleOpenModalFromPopup = (dusun: Dusun) => {
