@@ -71,7 +71,7 @@ function DetailDusunContent() {
       badge: "bg-green-500",
     },
     medium: {
-      bg: "bg-yellow-50",
+      bg: "bg-yellow-100",
       border: "border-yellow-500",
       text: "text-yellow-700",
       badge: "bg-yellow-500",
@@ -89,11 +89,27 @@ function DetailDusunContent() {
   return (
     <div className="w-full min-h-screen bg-gray-50">
       {/* Header with Back Button */}
-      <div className="bg-gradient-to-r from-[#044BB1] to-[#0566d6] text-white shadow-lg">
+      <div className="bg-gradient-to-r from-[#044BB1] to-[#0566d6] text-white shadow-lg relative overflow-hidden">
+        {/* Geometric Pattern Background */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute top-1/2 right-0 w-48 h-48 bg-white rounded-full translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute bottom-0 left-1/4 w-32 h-32 bg-white transform rotate-45"></div>
+          <div className="absolute top-1/4 right-1/4 w-24 h-24 bg-white rounded-full"></div>
+        </div>
+        
+        {/* Animated Dots Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="grid grid-cols-12 gap-4 h-full">
+        {[...Array(48)].map((_, i) => (
+          <div key={i} className="bg-white rounded-full w-2 h-2 animate-pulse" style={{ animationDelay: `${i * 0.1}s` }}></div>
+        ))}
+          </div>
+        </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <button
             onClick={() => router.push("/")}
-            className="inline-flex items-center space-x-2 bg-white text-[#044BB1] hover:bg-blue-50 rounded-lg px-5 py-3 mb-4 transition-all duration-200 shadow-md hover:shadow-lg font-semibold group"
+            className="inline-flex items-center space-x-2 bg-white text-[#044BB1] hover:bg-blue-100 rounded-lg px-5 py-3 mb-4 transition-all duration-200 shadow-md hover:shadow-lg font-semibold group"
           >
             <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -101,8 +117,8 @@ function DetailDusunContent() {
             <span>Kembali ke Beranda</span>
           </button>
           <div className="flex items-center space-x-4">
-            <div className="bg-white bg-opacity-20 rounded-lg p-3">
-              <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white bg-opacity-30 rounded-lg p-3 ">
+              <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="blue" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
@@ -157,7 +173,7 @@ function DetailDusunContent() {
 
           {/* Description Card */}
           <div className="max-w-5xl mx-auto">
-            <div className="bg-gradient-to-br from-blue-50 via-white to-blue-50 rounded-2xl p-6 sm:p-8 shadow-xl border border-blue-100 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-blue-100 via-white to-blue-100 rounded-2xl p-6 sm:p-8 shadow-xl border border-blue-100 relative overflow-hidden">
               {/* Decorative Elements */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-200/20 rounded-full -mr-16 -mt-16"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-300/20 rounded-full -ml-12 -mb-12"></div>

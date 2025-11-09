@@ -74,7 +74,7 @@ export const dusunData: Dusun[] = [
     position: [-7.9466149, 110.3681175] as [number, number],
     population: 1168, // Jumlah Penduduk
     riskLevel: "medium",
-    description: "Dusun Pelemadu memerlukan kewaspadaan pada musim hujan",
+    description: "Dusun Pelemadu di Desa Sriharjo, Imogiri, Bantul, dikenal sebagai sentra produksi peyek dan memiliki destinasi wisata keluarga bernama Lembah Sorory. Peyek yang diproduksi oleh sebagian besar warga dusun ini menjadi sumber penghasilan utama, dengan berbagai variasi seperti peyek kacang, kedelai, kacang hijau, teri, dan udang. Sementara itu, Lembah Sorory adalah tempat wisata alam yang memanfaatkan lahan di pinggir Sungai Opak yang sebelumnya tidak terurus menjadi area dengan suasana sejuk, banyak pohon bambu, dan berbagai wahana permainan. ",
     jumlahKK: 443,
     jumlahLakiLaki: 567,
     jumlahPerempuan: 601,
