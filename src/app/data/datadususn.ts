@@ -206,7 +206,7 @@ export const dusunData: Dusun[] = [
     position: [-7.9413773, 110.4065744] as [number, number],
     population: 1007, // Jumlah Penduduk
     riskLevel: "medium",
-    description: "Dusun Sompok memiliki kondisi yang relatif aman blslsll",
+    description: "Dusun Sompok di Sriharjo, Bantul, dikenal sebagai daerah yang mengembangkan potensi wisatanya, baik alam maupun edukasi, di antaranya adalah Sompok Trekking dengan jalur pendakian perbukitan alami, pemandangan laut selatan, dan Podjok Edukasi Sompok yang menawarkan pengalaman hidup pedesaan dan potensi pertanian. Warga setempat, termasuk pemuda dan ibu-ibu, aktif menata kawasan dan menyiapkan layanan seperti wisata kuliner tradisional dan atraksi budaya, seperti gejog lesung dan jatilan. ",
     jumlahKK: 359,
     jumlahLakiLaki: 500,
     jumlahPerempuan: 507,
