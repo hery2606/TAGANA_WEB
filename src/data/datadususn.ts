@@ -24,7 +24,7 @@ export const dusunData: Dusun[] = [
     population: 954, // Jumlah Penduduk
     riskLevel: "medium",
     description:
-      "Dusun Miri terletak di wilayah tengah Sriharjo dengan aksesibilitas yang baik",
+      "Dusun Miri adalah bagian dari Desa Sriharjo, yang merupakan gabungan dari tiga kelurahan lama: Mojohuro, Dogongan, dan Kedungmiri. Desa Sriharjo sendiri terkenal dengan keindahan alamnya yang masih asri, suasana pedesaan yang tenang, dan kegiatan pertanian tradisional, serta kaya akan budaya lokal. ",
     jumlahKK: 339,
     jumlahLakiLaki: 485,
     jumlahPerempuan: 469,
@@ -41,7 +41,7 @@ export const dusunData: Dusun[] = [
     population: 1143, // Jumlah Penduduk
     riskLevel: "low",
     description:
-      "Dusun Jati memiliki kondisi geografis yang relatif aman dari bencana",
+      "Dusun Jati adalah salah satu pedukuhan di Kalurahan Sriharjo, Kecamatan Imogiri, Kabupaten Bantul. Dusun ini berada di wilayah yang subur, dengan ciri khas suasana pedesaan yang tenang, pertanian, dan keramahan penduduk, serta merupakan bagian dari kalurahan yang memiliki sejarah panjang dari penggabungan tiga desa lama. Dusun Jati sendiri terdiri dari 7 RT. ",
     jumlahKK: 415,
     jumlahLakiLaki: 564,
     jumlahPerempuan: 579,
@@ -58,7 +58,7 @@ export const dusunData: Dusun[] = [
     population: 914, // Jumlah Penduduk
     riskLevel: "low",
     description:
-      "Dusun Mojohuro berada di dataran dengan risiko bencana rendah",
+      "Dusun Mojohuro adalah bagian dari Kalurahan Sriharjo, yang terletak di Kecamatan Imogiri, Bantul, Daerah Istimewa Yogyakarta. Wilayah ini memiliki sejarah penting karena menjadi pusat pemerintahan awal Kalurahan Sriharjo setelah penggabungan tiga desa. Mojohuro dikenal sebagai wilayah yang subur dan merupakan salah satu padukuhan di Sriharjo, yang juga menjadi bagian dari desa wisata dan memiliki potensi pertanian yang besar. ",
     jumlahKK: 344,
     jumlahLakiLaki: 483,
     jumlahPerempuan: 431,
@@ -91,7 +91,7 @@ export const dusunData: Dusun[] = [
     population: 475, // Jumlah Penduduk
     riskLevel: "medium",
     description:
-      "Dusun Sungapan terletak di area yang memerlukan pemantauan rutin",
+      "Dusun Sungapan merupakan salah satu pedukuhan yang terletak di Desa Sriharjo, Kecamatan Imogiri, Kabupaten Bantul, Daerah Istimewa Yogyakarta. Dusun ini dikenal sebagai wilayah yang masyarakatnya menjunjung tinggi nilai gotong royong dan kebersamaan dalam berbagai kegiatan sosial maupun pembangunan lingkungan. Warga Sungapan aktif melaksanakan kerja bakti untuk menjaga kebersihan serta memperindah lingkungan, terutama di sekitar kawasan “jembatan baru” yang menjadi salah satu potensi wisata lokal.",
     jumlahKK: 179,
     jumlahLakiLaki: 217,
     jumlahPerempuan: 258,
@@ -108,7 +108,7 @@ export const dusunData: Dusun[] = [
     population: 460, // Jumlah Penduduk
     riskLevel: "high",
     description:
-      "Dusun Gondosuli berada di area rawan dengan risiko tinggi, perlu mitigasi aktif",
+      "Dusun Gondosuli adalah salah satu pedukuhan di Desa Sriharjo, Kecamatan Imogiri, Kabupaten Bantul, Daerah Istimewa Yogyakarta — tepatnya satu dari 13 dusun yang membentuk desa tersebut. Dusun ini memiliki karakter yang kuat dalam budaya lokal, salah satu buktinya adalah tradisi tahunan “Mbang Gadhungan” di mana warga mengelilingi kampung sambil bersenandung sebagai ungkapan syukur atas hasil bumi dan ternak.",
     jumlahKK: 180,
     jumlahLakiLaki: 223,
     jumlahPerempuan: 237,
@@ -125,7 +125,7 @@ export const dusunData: Dusun[] = [
     population: 695, // Jumlah Penduduk
     riskLevel: "high",
     description:
-      "Dusun Trukan memiliki topografi yang memerlukan perhatian khusus",
+      "Dusun Trukan merupakan salah satu pedukuhan di Desa Sriharjo, Kecamatan Imogiri, Kabupaten Bantul. Warga Trukan terkenal dengan keberadaan organisasi seni tradisional seperti Jatilan Trukan yang aktif melestarikan kesenian kuda lumping. Dalam aspek sosial-kultural, Trukan rutin menggelar acara adat seperti “merti dusun” yang diselenggarakan sebagai ungkapan syukur dan kekompakan warga—contohnya acara gabungan dengan Dusun Gondosuli pada tahun 2018.  Selain it, pembangunan fasilitas umum seperti balai dusun juga menjadi salah satu fokus bersama warga dan pemerintah desa untuk mendukung kegiatan masyarakat di Trukan.",
     jumlahKK: 249,
     jumlahLakiLaki: 354,
     jumlahPerempuan: 341,
@@ -142,7 +142,7 @@ export const dusunData: Dusun[] = [
     population: 532, // Jumlah Penduduk
     riskLevel: "high",
     description:
-      "Dusun Dogongan berada di zona risiko tinggi, evakuasi prioritas",
+      "Dusun Dogongan adalah salah satu kalurahan lama yang sekarang menjadi bagian dari Kalurahan Sriharjo, di Kecamatan Imogiri, Kabupaten Bantul, Yogyakarta. Kalurahan Sriharjo dibentuk pada tahun 1946 dari penggabungan tiga kalurahan lama, yaitu Mojohuro, Dogongan, dan Kedungmiri. Meskipun saat ini sudah menjadi satu kalurahan, sejarahnya masih melekat dengan wilayah tersebut. ",
     jumlahKK: 190,
     jumlahLakiLaki: 257,
     jumlahPerempuan: 275,
@@ -158,7 +158,7 @@ export const dusunData: Dusun[] = [
     position: [-7.9463378,110.3814805] as [number, number],
     population: 543, // Jumlah Penduduk
     riskLevel: "high",
-    description: "Dusun Ketos terletak di area dengan potensi bahaya tinggi",
+    description: "Dusun Ketos merupakan salah satu pedukuhan di Desa Sriharjo, Kecamatan Imogiri, Kabupaten Bantul. Dusun ini dikenal dengan lingkungan yang masih asri dan masyarakatnya yang memegang kuat nilai kebersamaan serta gotong royong. Warga Ketos aktif dalam kegiatan sosial seperti kerja bakti, ronda malam, dan kegiatan keagamaan. Selain itu, beberapa warga juga mengembangkan usaha kecil di bidang pertanian dan peternakan yang menjadi sumber penghidupan utama. Potensi alam dan semangat warganya menjadikan Dusun Ketos terus berkembang dalam upaya menjaga keseimbangan antara tradisi dan kemajuan.",
     jumlahKK: 215,
     jumlahLakiLaki: 260,
     jumlahPerempuan: 283,
@@ -174,7 +174,7 @@ export const dusunData: Dusun[] = [
     position: [-7.948198, 110.385714] as [number, number], // Koordinat sama dengan Miri? Pastikan ini benar.
     population: 638, // Jumlah Penduduk
     riskLevel: "medium",
-    description: "Dusun Ngrancah memerlukan monitoring berkala",
+    description: "Dusun Ngrancah terletak di wilayah selatan Desa Sriharjo dan dikenal sebagai dusun yang memiliki keakraban sosial yang tinggi. Warga Ngrancah banyak bergerak di sektor pertanian dan kerajinan lokal. Kegiatan masyarakat sering berpusat di balai dusun sebagai tempat musyawarah, arisan, dan kegiatan kebudayaan seperti merti dusun dan kesenian tradisional. Ngrancah memiliki lingkungan yang sejuk dengan pemandangan perbukitan khas Imogiri, menjadikannya tempat yang nyaman serta sarat dengan nilai-nilai kebersamaan antarwarga.",
     jumlahKK: 243,
     jumlahLakiLaki: 307,
     jumlahPerempuan: 331,
@@ -190,7 +190,7 @@ export const dusunData: Dusun[] = [
     position: [-7.9450995, 110.3979074] as [number, number],
     population: 288, // Jumlah Penduduk
     riskLevel: "medium",
-    description: "Dusun Pengkol berada di area transisi dengan risiko sedang",
+    description: "Dusun Pengkol merupakan wilayah yang memiliki karakter masyarakat pekerja keras dan kreatif. Mayoritas penduduknya bekerja di sektor pertanian dan usaha kecil menengah, dengan beberapa warga mengembangkan produk olahan hasil pertanian. Dusun ini juga aktif dalam kegiatan pemberdayaan masyarakat dan pembinaan generasi muda melalui karang taruna serta kegiatan sosial. Nilai gotong royong masih sangat dijaga, terlihat dari aktivitas rutin seperti bersih lingkungan, perbaikan jalan, dan kegiatan keagamaan bersama. Dusun Pengkol menjadi contoh pedukuhan yang mengedepankan keseimbangan antara kerja keras, solidaritas, dan tradisi.",
     jumlahKK: 111,
     jumlahLakiLaki: 141,
     jumlahPerempuan: 147,
@@ -223,7 +223,7 @@ export const dusunData: Dusun[] = [
     population: 600, // Jumlah Penduduk
     riskLevel: "medium",
     description:
-      "Dusun Wunut memerlukan kewaspadaan pada kondisi cuaca ekstrem",
+      "Dusun Wunut memiliki suasana pedesaan yang tenang dengan masyarakat yang hidup rukun dan menjunjung tinggi nilai kekeluargaan. Sebagian besar penduduk Wunut bermata pencaharian sebagai petani dan buruh tani. Dusun ini juga dikenal karena kegiatan sosial yang aktif, seperti posyandu, kelompok tani, dan kegiatan kebersihan lingkungan. Selain itu, Wunut memiliki potensi alam yang dapat dikembangkan menjadi daya tarik wisata pedesaan, berkat pemandangan sawah dan lingkungan yang masih alami. Masyarakatnya menjaga kelestarian budaya lokal dan terus berupaya meningkatkan kesejahteraan melalui kerja sama dan semangat kebersamaan.",
     jumlahKK: 226,
     jumlahLakiLaki: 294,
     jumlahPerempuan: 306,

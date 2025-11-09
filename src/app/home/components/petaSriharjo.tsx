@@ -7,6 +7,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { InfoModal } from "@/components/ui/modal_desa";
 import { desaBoundary } from "@/data/PetaSriharjoBoundary";
+import { sriharjoCoordinates } from "@/data/sriharjoCoordinates";
 import { dusunData } from "@/data/datadususn";
 
 
@@ -729,6 +730,20 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
           }}
         />
 
+        {/* Detailed Sriharjo polygon from imported coordinates (renders more detailed outline)
+        <Polygon
+          positions={sriharjoCoordinates}
+          pathOptions={{
+            color: "#ffffff",
+            weight: 2,
+            opacity: 0.9,
+            lineJoin: "round",
+          }}
+          // subtle fill so area is visible but doesn't overpower the main highlight
+          fillColor="#FF5722"
+          fillOpacity={0.06}
+        /> */}
+
         {/* Markers untuk setiap dusun dengan label permanen - FILTERED */}
         {filteredDusunData.map((dusun) => (
           <Marker
@@ -839,7 +854,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
                         clipRule="evenodd"
                       />
                     </svg>
-                    <p className="text-xs text-gray-600 leading-relaxed">
+                    <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
                       {dusun.description}
                     </p>
                   </div>
