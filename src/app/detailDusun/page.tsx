@@ -2,10 +2,11 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import { dusunData, Dusun } from "../../data/datadususn";
-import { getDusunImageById, getDusunAltText } from "../../data/image";
+import { dusunData, Dusun } from "@/data/datadususn";
+import { getDusunImageById, getDusunAltText } from "@/data/image";
 import dynamic from "next/dynamic";
-import Footer from "@/app/components/footer/page";
+import Image from "next/image";
+import { BackButton } from "@/components/ui/back-button";
 
 // Dynamic import untuk Leaflet
 const MapContainer = dynamic(
@@ -107,15 +108,7 @@ function DetailDusunContent() {
           </div>
         </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <button
-            onClick={() => router.push("/")}
-            className="inline-flex items-center space-x-2 bg-white text-[#044BB1] hover:bg-blue-100 rounded-lg px-5 py-3 mb-4 transition-all duration-200 shadow-md hover:shadow-lg font-semibold group"
-          >
-            <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            <span>Kembali ke Beranda</span>
-          </button>
+          <BackButton href="/" label="Kembali ke Beranda" />
           <div className="flex items-center space-x-4">
             <div className="bg-white bg-opacity-30 rounded-lg p-3 ">
               <svg className="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="blue" viewBox="0 0 24 24">
@@ -136,19 +129,20 @@ function DetailDusunContent() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Photo Container */}
             <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl mb-8">
-            <img 
+            <Image 
               src={imageError ? "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80" : getDusunImageById(dusun.id)}
               alt={getDusunAltText(dusun.id)}
+              width={1200}
+              height={800}
               className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-              onError={(e) => {
+              onError={() => {
                 console.error(`Image failed to load for ${dusun.name} (ID: ${dusun.id})`);
                 setImageError(true);
-                const target = e.target as HTMLImageElement;
-                target.src = "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80";
               }}
               onLoad={() => {
                 console.log(`Image loaded successfully for ${dusun.name}`);
               }}
+              priority
             />
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
@@ -336,7 +330,6 @@ export default function DetailDusunPage() {
       </div>
     }>
       <DetailDusunContent />
-      <Footer />
     </Suspense>
   );
 }

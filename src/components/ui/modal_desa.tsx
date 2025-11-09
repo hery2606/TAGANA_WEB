@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { dusunData } from "../data/datadususn";
+import { dusunData } from "@/data/datadususn";
 
 interface ModalProps {
   isOpen: boolean;
