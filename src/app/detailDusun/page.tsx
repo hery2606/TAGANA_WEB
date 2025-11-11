@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import { dusunData, Dusun } from "@/data/datadususn";
+import { dusunData, rtDataByDusun, getRTDataForDusun } from "@/data/datadususn";
 import { getDusunImageById, getDusunAltText } from "@/data/image";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -41,7 +41,7 @@ function DetailDusunContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dusunId = searchParams.get("id");
-  const [dusun, setDusun] = useState<Dusun | null>(null);
+  const [dusun, setDusun] = useState<any>(null);
   const [mapReady, setMapReady] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -315,9 +315,9 @@ function DetailDusunContent() {
               <div className="bg-white rounded-2xl p-5 shadow-xl">
               <h3 className="font-bold text-gray-800 mb-4 flex items-center text-base sm:text-lg">
                 <div className="bg-gradient-to-br from-[#044BB1] to-[#0566d6] rounded-lg p-2 mr-3">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
                 Tampilan Satelit
               </h3>
@@ -352,13 +352,13 @@ function DetailDusunContent() {
               </div>
               <span className="flex-1">
                 Daftar Rukun Tetangga (RT)
-                <span className="block text-sm font-normal text-gray-500 mt-1">Informasi RT di Dusun {dusun.name}</span>
+                <span className="block text-sm font-normal text-gray-500 mt-1">Informasi RT di {dusun.name}</span>
               </span> 
               </h3>
               
-              {dusun.rtList && dusun.rtList.length > 0 ? (
+              {dusun.rtData && dusun.rtData.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {dusun.rtList.map((rt, index) => (
+                {dusun.rtData.map((rt: any, index: number) => (
                 <div 
                   key={index}
                   className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-5 border-2 border-blue-100 hover:border-blue-300 hover:shadow-lg transition-all duration-300 cursor-pointer group"
@@ -370,26 +370,22 @@ function DetailDusunContent() {
                     </svg>
                   </div>
                   <span className="bg-blue-100 text-[#044BB1] text-xs font-bold px-3 py-1 rounded-full">
-                    RT {rt.number}
+                    RT {rt.rt}
                   </span>
                   </div>
                   
                   <div className="space-y-2">
                   <div>
                     <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide">Ketua RT</p>
-                    <p className="text-base font-bold text-gray-800 truncate">{rt.name}</p>
+                    <p className="text-base font-bold text-gray-800 truncate">{rt.nama || "Belum ada data"}</p>
                   </div>
                   
-                  <div className="flex items-center justify-between pt-2 border-t border-blue-100">
-                    <div>
-                    <p className="text-xs text-gray-500">Jumlah KK</p>
-                    <p className="text-lg font-bold text-[#044BB1]">{rt.jumlahKK || 0}</p>
+                  {rt.lp && (
+                    <div className="pt-2 border-t border-blue-100">
+                      <p className="text-xs text-gray-500">Jenis Kelamin</p>
+                      <p className="text-sm font-semibold text-[#044BB1]">{rt.lp === "L" ? "Laki-laki" : "Perempuan"}</p>
                     </div>
-                    <div className="text-right">
-                    <p className="text-xs text-gray-500">Penduduk</p>
-                    <p className="text-lg font-bold text-[#044BB1]">{rt.population || 0}</p>
-                    </div>
-                  </div>
+                  )}
                   </div>
                 </div>
                 ))}
