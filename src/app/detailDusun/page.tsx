@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import { dusunData, rtDataByDusun, getRTDataForDusun } from "@/data/datadususn";
+import { dusunData,} from "@/data/datadususn";
 import { getDusunImageById, getDusunAltText } from "@/data/image";
 import dynamic from "next/dynamic";
 import Image from "next/image";

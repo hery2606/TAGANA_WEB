@@ -7,7 +7,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { InfoModal } from "@/components/ui/modal_desa";
 import { desaBoundary } from "@/data/PetaSriharjoBoundary";
-import { sriharjoCoordinates } from "@/data/sriharjoCoordinates";
 import { dusunData } from "@/data/datadususn";
 
 
