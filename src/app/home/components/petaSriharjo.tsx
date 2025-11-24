@@ -8,6 +8,7 @@ import "leaflet/dist/leaflet.css";
 import { InfoModal } from "@/components/ui/modal_desa";
 import { desaBoundary } from "@/data/PetaSriharjoBoundary";
 import { dusunData } from "@/data/datadususn";
+import { sriharjoKMLBoundaries } from "@/data/sriharjoKMLData";
 
 
 
@@ -467,6 +468,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
   const [mapZoom, setMapZoom] = useState(14);
   const [isMobile, setIsMobile] = useState(false);
   const [isLegendMinimized, setIsLegendMinimized] = useState(false);
+  const [showKMLBoundaries, setShowKMLBoundaries] = useState(true);
 
   // Calculate center point of Sriharjo boundary - Use useMemo to prevent recalculation
   const boundaryCenter = useMemo((): [number, number] => {
@@ -900,7 +902,64 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
             </Popup>
           </Marker>
         ))}
+
+        {/* KML Main Boundary - Enhanced polygon */}
+        {showKMLBoundaries && (
+          <Polygon
+            positions={sriharjoKMLBoundaries.mainBoundary}
+            pathOptions={{
+              color: "#FF5722",
+              weight: 3,
+              opacity: 0.8,
+              fillColor: "#FF5722",
+              fillOpacity: 0.1,
+              lineCap: "round",
+              lineJoin: "round",
+            }}
+          >
+            <Tooltip permanent={false}>
+              <div className="text-xs font-semibold">
+                Batas Detail Sriharjo (KML)
+              </div>
+            </Tooltip>
+          </Polygon>
+        )}
+
+        {/* KML Measurements - Jalur/Polylines */}
+        {showKMLBoundaries && sriharjoKMLBoundaries.measurements.map((measurement, index) => (
+          <Polyline
+            key={`measurement-${index}`}
+            positions={measurement.coordinates}
+            pathOptions={{
+              color: "#2dc0fb",
+              weight: 3,
+              opacity: 0.7,
+              lineCap: "round",
+              lineJoin: "round",
+            }}
+          >
+            <Tooltip>
+              <div className="text-xs">
+                {measurement.name || `Jalur ${index + 1}`}
+              </div>
+            </Tooltip>
+          </Polyline>
+        ))}
       </MapContainer>
+
+      {/* Toggle button for KML boundaries */}
+      <div className="absolute top-16 md:top-20 right-2 md:right-4 z-[500]">
+        <button
+          onClick={() => setShowKMLBoundaries(!showKMLBoundaries)}
+          className="bg-white hover:bg-gray-50 text-gray-700 px-3 py-2 rounded-lg shadow-lg border-2 border-gray-200 text-xs md:text-sm font-semibold transition-all duration-200 flex items-center space-x-2"
+          title={showKMLBoundaries ? "Sembunyikan Batas" : "Tampilkan Batas"}
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+          </svg>
+          <span>{showKMLBoundaries ? "Sembunyikan" : "Tampilkan"} Batas</span>
+        </button>
+      </div>
 
       {/* Custom CSS - Enhanced with mobile responsiveness */}
       <style jsx global>{`

@@ -216,8 +216,110 @@ function DetailDusunContent() {
                       {dusun.riskLevel === "low" ? "Rendah" : dusun.riskLevel === "medium" ? "Sedang" : "Tinggi"}
                     </span>
                   </div>
+                  
+                  {/* Detail Bencana Potensial */}
+                  <div className="mt-4 space-y-2">
+                    <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">Potensi Bencana di {dusun.name}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {/* Banjir */}
+                      {(dusun.riskLevel === "high" || dusun.riskLevel === "medium") && (
+                        <div className="flex items-start space-x-2 bg-white/50 rounded-lg p-2">
+                          <svg className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd" />
+                          </svg>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-gray-800">Banjir</p>
+                            <p className="text-xs text-gray-600">
+                              {dusun.riskLevel === "high" ? "Rawan banjir musim hujan" : "Potensi genangan air"}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Tanah Longsor */}
+                      {dusun.riskLevel === "high" && (
+                        <div className="flex items-start space-x-2 bg-white/50 rounded-lg p-2">
+                          <svg className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                          </svg>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-gray-800">Tanah Longsor</p>
+                            <p className="text-xs text-gray-600">Area lereng berpotensi longsor</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Gempa Bumi */}
+                      <div className="flex items-start space-x-2 bg-white/50 rounded-lg p-2">
+                        <svg className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-gray-800">Gempa Bumi</p>
+                          <p className="text-xs text-gray-600">Wilayah rawan gempa Merapi</p>
+                        </div>
+                      </div>
+                      
+                      {/* Erupsi Gunung Berapi */}
+                      <div className="flex items-start space-x-2 bg-white/50 rounded-lg p-2">
+                        <svg className="w-4 h-4 text-orange-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" />
+                        </svg>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-gray-800">Erupsi Merapi</p>
+                          <p className="text-xs text-gray-600">Potensi abu vulkanik & awan panas</p>
+                        </div>
+                      </div>
+                      
+                      {/* Angin Puting Beliung */}
+                      {(dusun.riskLevel === "medium" || dusun.riskLevel === "low") && (
+                        <div className="flex items-start space-x-2 bg-white/50 rounded-lg p-2">
+                          <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                          </svg>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-gray-800">Angin Puting Beliung</p>
+                            <p className="text-xs text-gray-600">Cuaca ekstrem musiman</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Kekeringan */}
+                      {dusun.riskLevel === "low" && (
+                        <div className="flex items-start space-x-2 bg-white/50 rounded-lg p-2">
+                          <svg className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clipRule="evenodd" />
+                          </svg>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-gray-800">Kekeringan</p>
+                            <p className="text-xs text-gray-600">Musim kemarau panjang</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Keterangan Tambahan */}
+                    <div className="mt-4 bg-white/60 rounded-lg p-3 border-l-4 border-blue-500">
+                      <div className="flex items-start space-x-2">
+                        <svg className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                        <div className="flex-1">
+                          <p className="text-xs font-semibold text-gray-700 mb-1">Kesiapsiagaan Bencana</p>
+                          <p className="text-xs text-gray-600 leading-relaxed">
+                            {dusun.riskLevel === "high" 
+                              ? "Warga diimbau selalu siaga dan mengikuti arahan tim TAGANA. Pastikan jalur evakuasi dan titik kumpul diketahui."
+                              : dusun.riskLevel === "medium"
+                              ? "Tingkatkan kewaspadaan terutama saat musim hujan. Siapkan tas siaga bencana untuk keluarga."
+                              : "Tetap waspada dan ikuti informasi dari BPBD. Lakukan simulasi evakuasi secara berkala."}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-center sm:text-right  rounded-xl p-4 sm:p-6 shadow-lg">
+                
+                <div className="text-center sm:text-right rounded-xl p-4 sm:p-6 shadow-lg">
                   <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-2">Total Penduduk</p>
                   <p className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#044BB1]">{dusun.population}</p>
                   <p className="text-sm text-gray-500 font-medium">jiwa</p>
