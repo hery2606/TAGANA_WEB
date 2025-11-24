@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { dusunData } from "../data/datadususn";
+import { dusunData } from "@/data/datadususn";
 
 interface ModalProps {
   isOpen: boolean;
@@ -36,6 +36,7 @@ export function InfoModal({ isOpen, onClose }: ModalProps) {
   // Calculate kepadatan (assuming luas wilayah 12.5 km²)
   const luasWilayah = 12.5;
   const kepadatan = Math.round(totalPopulation / luasWilayah);
+ 
 
   // Calculate age composition percentages
   const totalDewasa = totalPopulation - totalBalita - totalLansia;
@@ -50,7 +51,13 @@ export function InfoModal({ isOpen, onClose }: ModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/15 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-fade-in">
+      {/* CSS untuk menyembunyikan scrollbar pada container modal */}
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
+
+      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-fade-in hide-scrollbar">
         {/* Header */}
         <div className="sticky top-0 bg-linear-to-r from-[#044BB1] to-[#0566d6] text-white px-6 py-4 rounded-t-2xl flex items-center justify-between">
           <h2 className="text-2xl font-bold">Informasi Desa Sriharjo</h2>
@@ -232,17 +239,17 @@ export function InfoModal({ isOpen, onClose }: ModalProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white rounded-lg p-4 shadow-sm text-center">
                 <p className="text-sm text-gray-500 mb-2">Total Penduduk</p>
-                <p className="text-3xl font-bold text-[#044BB1]">{totalPopulation.toLocaleString()}</p>
+                <p className="text-3xl font-bold text-[#044BB1]"> ± 9000</p>
                 <p className="text-xs text-gray-400 mt-1">Jiwa</p>
               </div>
               <div className="bg-white rounded-lg p-4 shadow-sm text-center">
                 <p className="text-sm text-gray-500 mb-2">Jumlah KK</p>
-                <p className="text-3xl font-bold text-green-600">{totalKK.toLocaleString()}</p>
+                <p className="text-3xl font-bold text-green-600"> ± 3500</p>
                 <p className="text-xs text-gray-400 mt-1">Kepala Keluarga</p>
               </div>
               <div className="bg-white rounded-lg p-4 shadow-sm text-center">
                 <p className="text-sm text-gray-500 mb-2">Kepadatan</p>
-                <p className="text-3xl font-bold text-orange-500">{kepadatan}</p>
+                <p className="text-3xl font-bold text-orange-500"> ± 750</p>
                 <p className="text-xs text-gray-400 mt-1">Jiwa/km²</p>
               </div>
             </div>
@@ -254,11 +261,11 @@ export function InfoModal({ isOpen, onClose }: ModalProps) {
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Laki-laki</span>
-                    <span className="text-lg font-bold text-blue-600">{totalLakiLaki.toLocaleString()}</span>
+                    <span className="text-lg font-bold text-blue-600"> ± 4,650</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Perempuan</span>
-                    <span className="text-lg font-bold text-pink-600">{totalPerempuan.toLocaleString()}</span>
+                    <span className="text-lg font-bold text-pink-600"> ± 4,760</span>
                   </div>
                 </div>
               </div>

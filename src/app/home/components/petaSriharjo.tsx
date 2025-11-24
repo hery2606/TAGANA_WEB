@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, Polygon, LayersControl, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { InfoModal } from "../components/modals_desa";
-import { desaBoundary } from "../data/PetaSriharjoBoundary";
-import { dusunData } from "../data/datadususn";
+import { InfoModal } from "@/components/ui/modal_desa";
+import { desaBoundary } from "@/data/PetaSriharjoBoundary";
+import { dusunData } from "@/data/datadususn";
 
 
 
@@ -43,7 +43,7 @@ interface Dusun {
 // dusunData is now imported from ../data/datadususn
 
 // Custom marker icons based on risk level
-const createCustomIcon = (riskLevel: string) => {
+const createCustomIcon = (riskLevel: string, isMobile: boolean = false) => {
   const colors = {
     low: "#10b981", // green
     medium: "#f59e0b", // yellow/orange
@@ -52,15 +52,20 @@ const createCustomIcon = (riskLevel: string) => {
 
   const color = colors[riskLevel as keyof typeof colors] || colors.medium;
 
+  // Adjust sizes based on device
+  const markerSize = isMobile ? 28 : 36;
+  const innerCircleSize = isMobile ? 10 : 14;
+  const borderWidth = isMobile ? 2 : 3;
+
   return L.divIcon({
     className: "custom-marker",
     html: `
       <div style="position: relative;">
         <div style="
-          width: 36px;
-          height: 36px;
+          width: ${markerSize}px;
+          height: ${markerSize}px;
           background: ${color};
-          border: 3px solid white;
+          border: ${borderWidth}px solid white;
           border-radius: 50% 50% 50% 0;
           transform: rotate(-45deg);
           box-shadow: 0 4px 10px rgba(0,0,0,0.4);
@@ -69,8 +74,8 @@ const createCustomIcon = (riskLevel: string) => {
           justify-content: center;
         ">
           <div style="
-            width: 14px;
-            height: 14px;
+            width: ${innerCircleSize}px;
+            height: ${innerCircleSize}px;
             background: white;
             border-radius: 50%;
             transform: rotate(45deg);
@@ -78,9 +83,9 @@ const createCustomIcon = (riskLevel: string) => {
         </div>
       </div>
     `,
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-    popupAnchor: [0, -36],
+    iconSize: [markerSize, markerSize],
+    iconAnchor: [markerSize / 2, markerSize],
+    popupAnchor: [0, -markerSize],
   });
 };
 
@@ -134,7 +139,7 @@ function DusunModal({ isOpen, onClose, dusun }: DusunModalProps) {
 
   const handleViewDetail = () => {
     if (d) {
-      router.push(`/pages/detail_dusun?id=${d.id}`);
+      router.push(`/detailDusun?id=${d.id}`);
     }
   };
 
@@ -357,9 +362,11 @@ function DusunModal({ isOpen, onClose, dusun }: DusunModalProps) {
 function MapController({
   center,
   zoom,
+  isMobile,
 }: {
   center: [number, number];
   zoom: number;
+  isMobile: boolean;
 }) {
   const map = useMap();
 
@@ -373,10 +380,15 @@ function MapController({
     // Set max bounds to restrict panning
     map.setMaxBounds(paddedBounds);
 
-    // Set min/max zoom levels
-    map.setMinZoom(14);
-    map.setMaxZoom(20);
-  }, [map, center, zoom]);
+    // Set min/max zoom levels based on device
+    if (isMobile) {
+      map.setMinZoom(12); // Lower min zoom for mobile to see full map
+      map.setMaxZoom(19);
+    } else {
+      map.setMinZoom(13);
+      map.setMaxZoom(20);
+    }
+  }, [map, center, zoom, isMobile]);
 
   return null;
 }
@@ -470,7 +482,12 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
     
     // Detect mobile device
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      // Adjust initial zoom when switching between mobile/desktop
+      if (selectedDusunId === null) {
+        setMapZoom(mobile ? 13 : 14);
+      }
     };
     
     checkMobile();
@@ -481,11 +498,11 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
 
   const handleResetToSriharjo = () => {
     setMapCenter(boundaryCenter);
-    setMapZoom(14);
+    setMapZoom(isMobile ? 13 : 14);
   };
 
   const handleViewDetailFromPopup = (dusun: Dusun) => {
-    router.push(`/pages/detail_dusun?id=${dusun.id}`);
+    router.push(`/detailDusun?id=${dusun.id}`);
   };
 
   const handleOpenModalFromPopup = (dusun: Dusun) => {
@@ -496,15 +513,15 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
   useEffect(() => {
     if (selectedDusunId === null) {
       setMapCenter(boundaryCenter);
-      setMapZoom(14);
+      setMapZoom(isMobile ? 13 : 14);
     } else {
       const selectedDusun = dusunData.find(d => d.id === selectedDusunId);
       if (selectedDusun) {
         setMapCenter(selectedDusun.position);
-        setMapZoom(17);
+        setMapZoom(isMobile ? 16 : 17);
       }
     }
-  }, [selectedDusunId]); // Remove boundaryCenter from dependencies
+  }, [selectedDusunId, isMobile]);
 
   // Filter markers berdasarkan dusun yang dipilih
   const filteredDusunData = selectedDusunId 
@@ -526,7 +543,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
     <div className="relative w-full h-full">
       <MapContainer
         center={boundaryCenter}
-        zoom={isMobile ? 13.5 : 14}
+        zoom={isMobile ? 13 : 14}
         className="w-full h-full rounded-none md:rounded-xl"
         style={{ height: "100%", width: "100%", zIndex: 1 }}
         zoomControl={false}
@@ -535,7 +552,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
         dragging={true}
         touchZoom={true}
       >
-        <MapController center={mapCenter} zoom={mapZoom} />
+        <MapController center={mapCenter} zoom={mapZoom} isMobile={isMobile} />
         <BoundaryOverlay />
 
         {/* All Controls Container - Responsive positioning */}
@@ -729,18 +746,32 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
           }}
         />
 
+        {/* Detailed Sriharjo polygon from imported coordinates (renders more detailed outline)
+        <Polygon
+          positions={sriharjoCoordinates}
+          pathOptions={{
+            color: "#ffffff",
+            weight: 2,
+            opacity: 0.9,
+            lineJoin: "round",
+          }}
+          // subtle fill so area is visible but doesn't overpower the main highlight
+          fillColor="#FF5722"
+          fillOpacity={0.06}
+        /> */}
+
         {/* Markers untuk setiap dusun dengan label permanen - FILTERED */}
         {filteredDusunData.map((dusun) => (
           <Marker
             key={dusun.id}
             position={dusun.position}
-            icon={createCustomIcon(dusun.riskLevel)}
+            icon={createCustomIcon(dusun.riskLevel, isMobile)}
           >
             {/* Tooltip permanen menampilkan nama dusun */}
             <Tooltip
               permanent
               direction="top"
-              offset={[0, isMobile ? -30 : -40]}
+              offset={[0, isMobile ? -24 : -40]}
               className="custom-tooltip"
             >
               <div
@@ -839,7 +870,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
                         clipRule="evenodd"
                       />
                     </svg>
-                    <p className="text-xs text-gray-600 leading-relaxed">
+                    <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
                       {dusun.description}
                     </p>
                   </div>
@@ -911,11 +942,6 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
           /* Make layer control more compact */
           .leaflet-control-layers-list {
             font-size: 12px;
-          }
-          
-          /* Adjust marker size for mobile */
-          .custom-marker {
-            transform: scale(0.85);
           }
         }
         
