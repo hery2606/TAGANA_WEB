@@ -9,8 +9,7 @@ import { InfoModal } from "@/components/ui/modal_desa";
 import { desaBoundary } from "@/data/PetaSriharjoBoundary";
 import { dusunData } from "@/data/datadususn";
 import { sriharjoKMLBoundaries } from "@/data/sriharjoKMLData";
-
-
+import { sriharjoFloodBoundaries } from "@/data/zonabanjir";
 
 // Fix default marker icon issue in Next.js
 if (typeof window !== "undefined") {
@@ -54,9 +53,9 @@ const createCustomIcon = (riskLevel: string, isMobile: boolean = false) => {
   const color = colors[riskLevel as keyof typeof colors] || colors.medium;
 
   // Adjust sizes based on device
-  const markerSize = isMobile ? 28 : 36;
-  const innerCircleSize = isMobile ? 10 : 14;
-  const borderWidth = isMobile ? 2 : 3;
+  const markerSize = isMobile ? 22 : 25;
+  const innerCircleSize = isMobile ? 8 : 12;
+  const borderWidth = isMobile ? 1 : 2;
 
   return L.divIcon({
     className: "custom-marker",
@@ -469,6 +468,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
   const [isMobile, setIsMobile] = useState(false);
   const [isLegendMinimized, setIsLegendMinimized] = useState(false);
   const [showKMLBoundaries, setShowKMLBoundaries] = useState(true);
+  const [showFloodZone, setShowFloodZone] = useState(true);
 
   // Calculate center point of Sriharjo boundary - Use useMemo to prevent recalculation
   const boundaryCenter = useMemo((): [number, number] => {
@@ -663,6 +663,14 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
                         <div className="flex items-center space-x-2">
                           <div className="flex-shrink-0 w-6 md:w-8 h-0.5 border-t-2 border-dashed white-" ></div>
                           <span className="text-xs md:text-sm text-gray-700 font-medium">Batas Desa</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="flex-shrink-0 w-6 md:w-8 h-3 bg-red-500 opacity-25 border border-red-500"></div>
+                          <span className="text-xs md:text-sm text-gray-700 font-medium">Zona Rawan Banjir</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="flex-shrink-0 w-6 md:w-8 h-0.5 bg-yellow-400" style={{ height: '3px' }}></div>
+                          <span className="text-xs md:text-sm text-gray-700 font-medium">Jalan Utama</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <div className="flex-shrink-0 w-6 md:w-8 h-0.5 bg-green-500" style={{ height: '3px' }}></div>
@@ -903,6 +911,54 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
           </Marker>
         ))}
 
+        {/* Zona Banjir (Flood Zone) - Red with 25% opacity */}
+        {showFloodZone && (
+          <Polygon
+            positions={sriharjoFloodBoundaries.floodZone}
+            pathOptions={{
+              color: "#ef4444",
+              weight: 2,
+              opacity: 0.8,
+              fillColor: "#ef4444",
+              fillOpacity: 0.25,
+              lineCap: "round",
+              lineJoin: "round",
+            }}
+          >
+            <Tooltip>
+              <div className="text-xs font-semibold">
+                <div className="flex items-center space-x-1">
+                  <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-red-700">Zona Rawan Banjir</span>
+                </div>
+              </div>
+            </Tooltip>
+          </Polygon>
+        )}
+
+        {/* Jalan/Roads - Yellow lines */}
+        {showFloodZone && sriharjoFloodBoundaries.roads.map((road, index) => (
+          <Polyline
+            key={`road-${index}`}
+            positions={road.coordinates}
+            pathOptions={{
+              color: "#fbbf24",
+              weight: 3,
+              opacity: 0.9,
+              lineCap: "round",
+              lineJoin: "round",
+            }}
+          >
+            <Tooltip>
+              <div className="text-xs font-semibold">
+                {road.name || `Jalan ${index + 1}`}
+              </div>
+            </Tooltip>
+          </Polyline>
+        ))}
+
         {/* KML Main Boundary - Enhanced polygon */}
         {showKMLBoundaries && (
           <Polygon
@@ -947,17 +1003,30 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
         ))}
       </MapContainer>
 
-      {/* Toggle button for KML boundaries */}
-      <div className="absolute top-16 md:top-20 right-2 md:right-4 z-[500]">
+      {/* Control Buttons Container */}
+      <div className="absolute top-16 md:top-20 right-2 md:right-4 z-[500] space-y-2">
+        {/* Toggle Flood Zone Button */}
+        <button
+          onClick={() => setShowFloodZone(!showFloodZone)}
+          className={`w-full ${showFloodZone ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700'} px-3 py-2 rounded-lg shadow-lg border-2 ${showFloodZone ? 'border-red-600' : 'border-gray-200'} text-xs md:text-sm font-semibold transition-all duration-200 flex items-center space-x-2`}
+          title={showFloodZone ? "Sembunyikan Zona Banjir" : "Tampilkan Zona Banjir"}
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+          </svg>
+          <span>{showFloodZone ? "Sembunyikan" : "Tampilkan"} Zona Banjir</span>
+        </button>
+
+        {/* Toggle KML Boundaries Button */}
         <button
           onClick={() => setShowKMLBoundaries(!showKMLBoundaries)}
-          className="bg-white hover:bg-gray-50 text-gray-700 px-3 py-2 rounded-lg shadow-lg border-2 border-gray-200 text-xs md:text-sm font-semibold transition-all duration-200 flex items-center space-x-2"
-          title={showKMLBoundaries ? "Sembunyikan Batas" : "Tampilkan Batas"}
+          className={`w-full ${showKMLBoundaries ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700'} px-3 py-2 rounded-lg shadow-lg border-2 ${showKMLBoundaries ? 'border-orange-600' : 'border-gray-200'} text-xs md:text-sm font-semibold transition-all duration-200 flex items-center space-x-2`}
+          title={showKMLBoundaries ? "Sembunyikan Batas Detail" : "Tampilkan Batas Detail"}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
           </svg>
-          <span>{showKMLBoundaries ? "Sembunyikan" : "Tampilkan"} Batas</span>
+          <span>{showKMLBoundaries ? "Sembunyikan" : "Tampilkan"} Batas Detail</span>
         </button>
       </div>
 
