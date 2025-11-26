@@ -370,25 +370,25 @@ function MapController({
 }) {
   const map = useMap();
 
-  useEffect(() => {
-    map.setView(center, zoom, { animate: true, duration: 0.5 });
+ useEffect(() => {
+  if (!map) return;
+  
+  // Check if map is loaded safely
+  const mapInstance = map as any;
+  if (!mapInstance._loaded) return;
 
-    // Calculate bounds from desaBoundary
-    const bounds = L.latLngBounds(desaBoundary);
-    const paddedBounds = bounds.pad(0.1); // Add 10% padding
-
-    // Set max bounds to restrict panning
-    map.setMaxBounds(paddedBounds);
-
-    // Set min/max zoom levels based on device
-    if (isMobile) {
-      map.setMinZoom(12); // Lower min zoom for mobile to see full map
-      map.setMaxZoom(19);
-    } else {
-      map.setMinZoom(13);
-      map.setMaxZoom(20);
+  // Use setTimeout to ensure map is fully initialized
+  const timeoutId = setTimeout(() => {
+    try {
+      map.setView(center, zoom, { animate: true, duration: 0.5 });
+      // ...existing code...
+    } catch (error) {
+      console.error('Error setting map view:', error);
     }
-  }, [map, center, zoom, isMobile]);
+  }, 100);
+
+  return () => clearTimeout(timeoutId);
+}, [map, center, zoom, isMobile]);
 
   return null;
 }
@@ -451,6 +451,45 @@ function BoundaryOverlay() {
   return null;
 }
 
+// Component for toggle buttons
+function MapToggleButtons({
+  showFloodZone,
+  showKMLBoundaries,
+  onToggleFloodZone,
+  onToggleKMLBoundaries,
+}: {
+  showFloodZone: boolean;
+  showKMLBoundaries: boolean;
+  onToggleFloodZone: () => void;
+  onToggleKMLBoundaries: () => void;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+    container.style.backgroundColor = 'transparent';
+    container.style.border = 'none';
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.gap = '8px';
+
+    const CustomControl = L.Control.extend({
+      onAdd: function () {
+        return container;
+      },
+    });
+
+    const control = new CustomControl({ position: 'topright' });
+    control.addTo(map);
+
+    return () => {
+      map.removeControl(control);
+    };
+  }, [map]);
+
+  return null;
+}
+
 interface PetaSriharjoProps {
   selectedDusunId?: number | null;
   onDusunSelect?: (id: number | null) => void;
@@ -466,7 +505,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
   ]);
   const [mapZoom, setMapZoom] = useState(14);
   const [isMobile, setIsMobile] = useState(false);
-  const [isLegendMinimized, setIsLegendMinimized] = useState(false);
+  const [isLegendMinimized, setIsLegendMinimized] = useState(true);
   const [showKMLBoundaries, setShowKMLBoundaries] = useState(true);
   const [showFloodZone, setShowFloodZone] = useState(true);
 
@@ -501,6 +540,10 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
   const handleResetToSriharjo = () => {
     setMapCenter(boundaryCenter);
     setMapZoom(isMobile ? 13 : 14);
+    // Reset dusun selection if a prop function is provided
+    if (onDusunSelect) {
+      onDusunSelect(null);
+    }
   };
 
   const handleViewDetailFromPopup = (dusun: Dusun) => {
@@ -511,7 +554,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
     setSelectedDusun(dusun);
   };
 
-  // Update map when selectedDusunId changes from parent - FIX: Add proper dependencies
+  // Update map when selectedDusunId changes from parent
   useEffect(() => {
     if (selectedDusunId === null) {
       setMapCenter(boundaryCenter);
@@ -523,7 +566,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
         setMapZoom(isMobile ? 16 : 17);
       }
     }
-  }, [selectedDusunId, isMobile]);
+  }, [selectedDusunId, isMobile, boundaryCenter]);
 
   // Filter markers berdasarkan dusun yang dipilih
   const filteredDusunData = selectedDusunId 
@@ -555,46 +598,54 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
         touchZoom={true}
       >
         <MapController center={mapCenter} zoom={mapZoom} isMobile={isMobile} />
-        <BoundaryOverlay />
 
         {/* All Controls Container - Responsive positioning */}
         <div className="leaflet-control-container" style={{ zIndex: 500 }}>
-          {/* Zoom Controls - Responsive */}
-          <div className="leaflet-top leaflet-left ">
-            <div className="leaflet-control-zoom leaflet-bar leaflet-control bg-white shadow-2xl border border-gray-200 scale-90 md:scale-100 origin-top-left ml-1 mt-1 md:ml-2 md:mt-2">
-              <a
-                className="leaflet-control-zoom-in text-[#044BB1] hover:bg-gray-50"
-                href="#"
-                title="Zoom in"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const map = (e.target as any).closest(
-                    ".leaflet-container"
-                  )?._leaflet_map;
-                  if (map) map.zoomIn();
-                }}
-              >
-                +
-              </a>
-              <a
-                className="leaflet-control-zoom-out text-[#044BB1] hover:bg-gray-50"
-                href="#"
-                title="Zoom out"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const map = (e.target as any).closest(
-                    ".leaflet-container"
-                  )?._leaflet_map;
-                  if (map) map.zoomOut();
-                }}
-              >
-                −
-              </a>
+          {/* Toggle Buttons - Top Right */}
+          <div className="leaflet-top leaflet-right">
+            <div className="leaflet-control" style={{ marginTop: '10px', marginRight: '10px' }}>
+              <div className="flex flex-col gap-2">
+                {/* Reset View Button */}
+                <button
+                  onClick={handleResetToSriharjo}
+                  className="bg-white hover:bg-blue-50 text-[#044BB1] p-2.5 md:p-3 rounded-lg shadow-lg border-2 border-[#044BB1] transition-all duration-200 hover:shadow-xl flex items-center justify-center"
+                  title="Fokus ke Peta Sriharjo"
+                  aria-label="Fokus ke Peta Sriharjo"
+                >
+                  <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+
+                {/* Toggle Flood Zone Button */}
+                <button
+                  onClick={() => setShowFloodZone(!showFloodZone)}
+                  className={`${showFloodZone ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700'} px-3 py-2 rounded-lg shadow-lg border-2 ${showFloodZone ? 'border-red-600' : 'border-gray-200'} text-xs md:text-sm font-semibold transition-all duration-200 flex items-center space-x-2 whitespace-nowrap`}
+                  title={showFloodZone ? "Sembunyikan Zona Banjir" : "Tampilkan Zona Banjir"}
+                >
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                  </svg>
+                  <span className="hidden sm:inline">Zona Banjir</span>
+                </button>
+
+                {/* Toggle KML Boundaries Button */}
+                <button
+                  onClick={() => setShowKMLBoundaries(!showKMLBoundaries)}
+                  className={`${showKMLBoundaries ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700'} px-3 py-2 rounded-lg shadow-lg border-2 ${showKMLBoundaries ? 'border-orange-600' : 'border-gray-200'} text-xs md:text-sm font-semibold transition-all duration-200 flex items-center space-x-2 whitespace-nowrap`}
+                  title={showKMLBoundaries ? "Sembunyikan Batas Detail" : "Tampilkan Batas Detail"}
+                >
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                  <span className="hidden sm:inline">Batas Detail</span>
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Legend - Enhanced with minimize button */}
-          <div className="leaflet-bottom leaflet-left">
+          <div className="leaflet-bottom leaflet-left ">
             <div className={`leaflet-control bg-white rounded-lg md:rounded-xl shadow-xl border-2 border-gray-200 mb-1 md:mb-2 ml-1 md:ml-2 transition-all duration-300 ${isLegendMinimized ? 'p-2' : 'p-3 md:p-4'} ${isLegendMinimized ? 'max-w-[40px]' : 'max-w-[180px] md:max-w-sm'} ${isMobile ? 'text-xs' : ''}`}>
               {isLegendMinimized ? (
                 <button
@@ -698,8 +749,8 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
           </div>
         </div>
 
-        {/* Layer Control - Responsive positioning */}
-        <LayersControl position="topright">
+        {/* Layer Control - Moved to topleft to replace zoom controls */}
+        <LayersControl position="topleft">
           <LayersControl.BaseLayer name="Peta Jalan">
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -787,8 +838,8 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
               <div
                 style={{
                   background: "white",
-                  padding: isMobile ? "2px 6px" : "4px 8px",
-                  borderRadius: "4px",
+                  padding: isMobile ? "2px 3px" : "4px 8px",
+                  borderRadius: "30px",
                   boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
                   border: `2px solid ${
                     dusun.riskLevel === "low"
@@ -918,9 +969,9 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
             pathOptions={{
               color: "#ef4444",
               weight: 2,
-              opacity: 0.8,
+              opacity: 0.25,
               fillColor: "#ef4444",
-              fillOpacity: 0.25,
+              fillOpacity: 0.26,
               lineCap: "round",
               lineJoin: "round",
             }}
@@ -945,7 +996,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
             positions={road.coordinates}
             pathOptions={{
               color: "#fbbf24",
-              weight: 3,
+              weight: 5,
               opacity: 0.9,
               lineCap: "round",
               lineJoin: "round",
@@ -964,10 +1015,10 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
           <Polygon
             positions={sriharjoKMLBoundaries.mainBoundary}
             pathOptions={{
-              color: "#FF5722",
+              color: "#fffff",
               weight: 3,
               opacity: 0.8,
-              fillColor: "#FF5722",
+              fillColor: "#fffff",
               fillOpacity: 0.1,
               lineCap: "round",
               lineJoin: "round",
@@ -987,9 +1038,9 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
             key={`measurement-${index}`}
             positions={measurement.coordinates}
             pathOptions={{
-              color: "#2dc0fb",
-              weight: 3,
-              opacity: 0.7,
+              color: "#D9E9CF",
+              weight: 1,
+              // opacity: ,
               lineCap: "round",
               lineJoin: "round",
             }}
@@ -1002,33 +1053,6 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
           </Polyline>
         ))}
       </MapContainer>
-
-      {/* Control Buttons Container */}
-      <div className="absolute top-16 md:top-20 right-2 md:right-4 z-[500] space-y-2">
-        {/* Toggle Flood Zone Button */}
-        <button
-          onClick={() => setShowFloodZone(!showFloodZone)}
-          className={`w-full ${showFloodZone ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700'} px-3 py-2 rounded-lg shadow-lg border-2 ${showFloodZone ? 'border-red-600' : 'border-gray-200'} text-xs md:text-sm font-semibold transition-all duration-200 flex items-center space-x-2`}
-          title={showFloodZone ? "Sembunyikan Zona Banjir" : "Tampilkan Zona Banjir"}
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-          </svg>
-          <span>{showFloodZone ? "Sembunyikan" : "Tampilkan"} Zona Banjir</span>
-        </button>
-
-        {/* Toggle KML Boundaries Button */}
-        <button
-          onClick={() => setShowKMLBoundaries(!showKMLBoundaries)}
-          className={`w-full ${showKMLBoundaries ? 'bg-orange-500 hover:bg-orange-600 text-white' : 'bg-white hover:bg-gray-50 text-gray-700'} px-3 py-2 rounded-lg shadow-lg border-2 ${showKMLBoundaries ? 'border-orange-600' : 'border-gray-200'} text-xs md:text-sm font-semibold transition-all duration-200 flex items-center space-x-2`}
-          title={showKMLBoundaries ? "Sembunyikan Batas Detail" : "Tampilkan Batas Detail"}
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-          </svg>
-          <span>{showKMLBoundaries ? "Sembunyikan" : "Tampilkan"} Batas Detail</span>
-        </button>
-      </div>
 
       {/* Custom CSS - Enhanced with mobile responsiveness */}
       <style jsx global>{`
@@ -1070,6 +1094,12 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
           /* Make layer control more compact */
           .leaflet-control-layers-list {
             font-size: 12px;
+          }
+
+          /* Adjust toggle buttons on mobile */
+          .leaflet-top.leaflet-right .leaflet-control {
+            margin-top: 4px !important;
+            margin-right: 4px !important;
           }
         }
         

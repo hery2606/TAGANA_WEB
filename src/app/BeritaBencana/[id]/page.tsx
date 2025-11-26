@@ -133,25 +133,25 @@ export default function DetailBeritaPage() {
                       </h3>
                       <div className="space-y-2">
                         {berita.casualties.meninggal && (
-                          <div className="flex justify-between">
+                          <div className="flex justify-between text-red-900">
                             <span>Meninggal Dunia:</span>
                             <span className="font-bold">{berita.casualties.meninggal} orang</span>
                           </div>
                         )}
                         {berita.casualties.lukaBerat && (
-                          <div className="flex justify-between">
+                          <div className="flex justify-between text-red-800">
                             <span>Luka Berat:</span>
                             <span className="font-bold">{berita.casualties.lukaBerat} orang</span>
                           </div>
                         )}
                         {berita.casualties.lukaRingan && (
-                          <div className="flex justify-between">
+                          <div className="flex justify-between text-red-700">
                             <span>Luka Ringan:</span>
                             <span className="font-bold">{berita.casualties.lukaRingan} orang</span>
                           </div>
                         )}
                         {berita.casualties.hilang && (
-                          <div className="flex justify-between">
+                          <div className="flex justify-between text-red-900">
                             <span>Hilang:</span>
                             <span className="font-bold">{berita.casualties.hilang} orang</span>
                           </div>
@@ -168,7 +168,7 @@ export default function DetailBeritaPage() {
                         </svg>
                         Kerusakan
                       </h3>
-                      <div className="space-y-2">
+                      <div className="space-y-2 text-orange-900">
                         {berita.damage.rumah && (
                           <div className="flex justify-between">
                             <span>Rumah Rusak:</span>
