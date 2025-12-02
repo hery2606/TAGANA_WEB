@@ -495,6 +495,8 @@ interface PetaSriharjoProps {
   onDusunSelect?: (id: number | null) => void;
 }
 
+
+
 export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: PetaSriharjoProps) {
   const router = useRouter();
   const [selectedDusun, setSelectedDusun] = useState<Dusun | null>(null);
@@ -516,6 +518,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
     const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
     const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
     return [centerLat, centerLng];
+    const mapRef = useRef<any>(null);
   }, []); // Empty dependency array since desaBoundary is static
 
   useEffect(() => {
@@ -538,12 +541,11 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
   }, []);
 
   const handleResetToSriharjo = () => {
-    setMapCenter(boundaryCenter);
-    setMapZoom(isMobile ? 13 : 14);
-    // Reset dusun selection if a prop function is provided
-    if (onDusunSelect) {
+    if (selectedDusunId !== null && onDusunSelect) {
       onDusunSelect(null);
     }
+    setMapCenter(boundaryCenter);
+    setMapZoom(isMobile ? 13 : 14);
   };
 
   const handleViewDetailFromPopup = (dusun: Dusun) => {
@@ -731,17 +733,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
                     </div>
 
                     {/* Titik Penting Section */}
-                    <div className="border-t border-gray-200 pt-2">
-                      <p className="text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Titik Penting</p>
-                      <div className="space-y-1.5">
-                        <div className="flex items-center space-x-2">
-                          <div className="flex-shrink-0 w-3 h-3 md:w-4 md:h-4 bg-blue-600 rounded-sm border-2 border-white shadow-md flex items-center justify-center">
-                            <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-white rounded-full"></div>
-                          </div>
-                          <span className="text-xs md:text-sm text-gray-700 font-medium">Titik Kumpul</span>
-                        </div>
-                      </div>
-                    </div>
+                    
                   </div>
                 </>
               )}
@@ -976,16 +968,7 @@ export default function PetaSriharjo({ selectedDusunId = null, onDusunSelect }: 
               lineJoin: "round",
             }}
           >
-            <Tooltip>
-              <div className="text-xs font-semibold">
-                <div className="flex items-center space-x-1">
-                  <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-red-700">Zona Rawan Banjir</span>
-                </div>
-              </div>
-            </Tooltip>
+           
           </Polygon>
         )}
 
