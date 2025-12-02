@@ -3,10 +3,14 @@ export interface DisasterDetail {
   type: string;
   severity: "none" | "low" | "medium" | "high";
   description: string;
-  icon: string; // icon identifier: flood, landslide, earthquake, volcano, wind, drought
+  icon: string; 
+  // icon identifier: flood, landslide, earthquake, volcano, wind, drought
 }
 
 // type iconType = "flood" | "landslide" | "earthquake" | "volcano" | "wind" | "drought";
+
+
+
 
 // Disaster data for each dusun
 export const disasterDataByDusun: { [key: string]: DisasterDetail[] } = {
@@ -17,8 +21,6 @@ export const disasterDataByDusun: { [key: string]: DisasterDetail[] } = {
       description: "Potensi genangan air saat musim hujan di area lembah", 
       icon: "flood" 
     },
-   
- 
   ],
   "Jati": [
     { 

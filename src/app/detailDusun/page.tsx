@@ -43,7 +43,6 @@ function DetailDusunContent() {
   const dusunId = searchParams.get("id");
   const [dusun, setDusun] = useState<any>(null);
   const [mapReady, setMapReady] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     if (dusunId) {
@@ -55,7 +54,7 @@ function DetailDusunContent() {
 
   if (!dusun) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center ">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#044BB1] mx-auto mb-4"></div>
           <p className="text-gray-600 font-semibold">Memuat Data Dusun...</p>
@@ -134,7 +133,7 @@ function DetailDusunContent() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-white">
       {/* Header with Back Button */}
       <div className="bg-gradient-to-r from-[#044BB1] to-[#0566d6] text-white shadow-lg relative overflow-hidden">
         {/* Geometric Pattern Background */}
@@ -176,19 +175,17 @@ function DetailDusunContent() {
           {/* Photo Container */}
           <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl mb-8">
             <Image
-              src={imageError ? "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80" : getDusunImageById(dusun.id)}
+              src={getDusunImageById(dusun.id)}
               alt={getDusunAltText(dusun.id)}
               width={1200}
               height={800}
               className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-              onError={() => {
-                console.error(`Image failed to load for ${dusun.name} (ID: ${dusun.id})`);
-                setImageError(true);
-              }}
-              onLoad={() => {
-                console.log(`Image loaded successfully for ${dusun.name}`);
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80";
               }}
               priority
+              unoptimized
             />
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
