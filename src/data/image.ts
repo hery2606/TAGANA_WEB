@@ -89,15 +89,15 @@ export const dusunImages: DusunImage[] = [
 
 // Default fallback image
 export const defaultDusunImage = {
-  imagePath: "/images/dusun/default.jpeg",
+  imagePath: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80",
   altText: "Pemandangan Desa Sriharjo"
 };
 
 // Helper function untuk mendapatkan gambar berdasarkan ID dusun
-export const getDusunImageById = (id: number): string => {
+export function getDusunImageById(id: number): string {
   const dusunImage = dusunImages.find(img => img.id === id);
   return dusunImage?.imagePath || defaultDusunImage.imagePath;
-};
+}
 
 // Helper function untuk mendapatkan gambar berdasarkan nama dusun
 export const getDusunImageByName = (name: string): string => {

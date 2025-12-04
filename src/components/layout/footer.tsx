@@ -40,45 +40,45 @@ export default function Footer() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Main Footer Content */}
-        <div className="flex flex-row justify-center items-start gap-8 mb-8">
+        <div className="flex flex-col items-center text-center space-y-6 mb-10">
           {/* About Section */}
-          <div className="space-y-4 w-full">
+          <div className="space-y-4 max-w-2xl">
             <div className="flex items-center justify-center space-x-3">
-              
               <div>
-                <h3 className="text-xl font-bold">TAGANA</h3>
+                <h3 className="text-2xl font-bold tracking-wide">TAGANA</h3>
               </div>
             </div>
-            <p className="text-sm text-blue-100 ">
+            <p className="text-sm text-blue-100 leading-relaxed">
               Sistem Informasi Manajemen Bencana untuk Desa Sriharjo, membantu
               koordinasi dan respons cepat dalam situasi darurat.
             </p>
           </div>
-        </div>
 
-        {/* Divider */}
-        <div className="border-t border-blue-400 opacity-30 my-8">
-          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-          <div className="flex items-center space-x-2 text-sm text-blue-100">
-            <span>2025 Contributor : Sagara Imam Samudra | Heri Arista | Naufal Adna Garibaldi</span>
-          </div>
-            
+          {/* Contributors Section */}
+          <div className="border-t border-blue-400 opacity-30 w-full max-w-4xl pt-8">
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-blue-200 uppercase tracking-wider">
+                Contributors 2025
+              </p>
+              <p className="text-sm text-blue-100">
+                Sagara Imam Samudra | Heri Arista | Naufal Adna Garibaldi
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-blue-400 opacity-30 pt-6">
-          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 text-center md:text-left">
             <div className="flex items-center space-x-2 text-sm text-blue-100">
-              
               <span>© {currentYear} TAGANA Sriharjo. All rights reserved.</span>
             </div>
             <div className="flex items-center space-x-4 text-sm text-blue-100">
-              <span className="hover:text-white cursor-pointer transition-colors">
+              <span className="hover:text-white cursor-pointer transition-colors duration-200">
                 Privacy Policy
               </span>
               <span className="text-blue-400">•</span>
-              <span className="hover:text-white cursor-pointer transition-colors">
+              <span className="hover:text-white cursor-pointer transition-colors duration-200">
                 Terms of Service
               </span>
             </div>
