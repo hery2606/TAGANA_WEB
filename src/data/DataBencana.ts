@@ -10,7 +10,7 @@ export interface DisasterDetail {
 // type iconType = "flood" | "landslide" | "earthquake" | "volcano" | "wind" | "drought";
 
 
-
+// kontol kuda
 
 // Disaster data for each dusun
 export const disasterDataByDusun: { [key: string]: DisasterDetail[] } = {
