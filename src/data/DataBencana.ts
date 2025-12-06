@@ -11,7 +11,7 @@ export interface DisasterDetail {
 
 
 // kontol kuda
-
+// coba force
 // Disaster data for each dusun
 export const disasterDataByDusun: { [key: string]: DisasterDetail[] } = {
   "Miri": [
