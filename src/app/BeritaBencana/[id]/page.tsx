@@ -4,6 +4,13 @@ import { useParams, useRouter } from "next/navigation";
 import { beritaBencanaData } from "@/data/beritaBencana";
 import { use } from "react";
 
+// Generate static params for all berita IDs
+export function generateStaticParams() {
+  return beritaBencanaData.map((berita) => ({
+    id: berita.id.toString(),
+  }));
+}
+
 export default function DetailBeritaPage() {
   const router = useRouter();
   const params = useParams();
